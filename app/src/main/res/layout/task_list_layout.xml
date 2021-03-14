@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:id="@+id/notes_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="1dp"
+
+    android:orientation="vertical"
+    android:paddingEnd="8dp">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+
+        <TextView
+            android:id="@+id/tvDateTimeTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="right"
+            android:minLines="2"
+            android:paddingTop="4dp"
+            android:text="TextView"
+            android:textSize="11sp"
+            android:textStyle="normal|italic" />
+
+        <ImageView
+            android:id="@+id/ivTaskDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/content"
+            app:srcCompat="@drawable/ic_done_white_24" />
+
+        <ImageView
+            android:id="@+id/task_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:padding="16dp"
+            app:srcCompat="@drawable/ic_market_white_24" />
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/task_icon"
+            android:maxLines="1"
+            android:paddingTop="8dp"
+            android:textSize="14sp"
+            tool:text="ewkdfwejkrjewkljkewj" />
+
+        <TextView
+            android:id="@+id/task_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/content"
+            android:layout_alignStart="@+id/content"
+            android:layout_alignBottom="@+id/task_icon"
+            android:maxLines="1"
+            android:paddingBottom="2dp"
+            android:textSize="12sp"
+            tool:text="ewkdfwej pghigp\gpopog\gpopg\gp ytpoity tpoptoy tyokrjewkljkewj" />
+
+    </RelativeLayout>
+</LinearLayout>
+
+
+

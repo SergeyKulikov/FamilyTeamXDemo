@@ -1,0 +1,175 @@
+<resources>
+    <string name="app_name">Family Team X</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="family_team_header">Family Team</string>
+    <string name="action_drop_database">Drop database</string>
+    <string name="kl">;kl</string>
+    <string name="todo">TODO</string>
+    <string name="buttonOk">OK</string>
+    <string name="buttonCancel">Cancel</string>
+    <string name="deleteTaskRequest">Dou you want to delete current task?</string>
+    <string name="text_tab1">active</string>
+    <string name="text_tab2">arxive</string>
+    <string name="text_tab3">deleted</string>
+    <string name="text_tab_header">Свой заголовок</string>
+    <string name="active_tab_name">Active</string>
+    <string name="done_tab_name">Done</string>
+
+    <string name="util_hot_water">Hot water</string>
+    <string name="util_cold_water">Cold water</string>
+    <string name="util_gaz">Gaz</string>
+    <string name="util_electricity">Electricity</string>
+    <string name="util_heating">Heating</string>
+    <string name="util_internet">Internet</string>
+    <string name="util_television">Television</string>
+
+    <string-array name="systems_goods">
+        <item>Beef</item>
+        <item>Pork</item>
+        <item>Chicken</item>
+        <item>Milk</item>
+        <item>Bred</item>
+        <item>Eggs</item>
+        <item>Butter</item>
+        <item>Potato</item>
+        <item>Tomato</item>
+        <item>Onion</item>
+        <item>Carrot</item>
+    </string-array>
+
+    <string-array name="units_goods">
+        <item></item>
+        <item>item</item>
+        <item>kilo</item>
+        <item>gramm</item>
+        <item>pound</item>
+        <item>liter</item>
+        <item>inch</item>
+        <item>inch2</item>
+        <item>inch3</item>
+        <item>m</item>
+        <item>m2</item>
+        <item>m3</item>
+    </string-array>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="created_time">Created time</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="action_delete_task">Delete task</string>
+    <string name="done_button">OK</string>
+    <string name="task_name_caption">Task name</string>
+    <string name="task_type_caption">Task type</string>
+    <string name="task_descr_caption">Task description</string>
+    <string name="action_prop_task">Propertry</string>
+    <string name="none">None</string>
+    <string name="item_value">Value</string>
+    <string name="item_price">Price</string>
+    <string name="item_sum">Sum</string>
+    <string name="item_unit">Unit</string>
+    <string name="item_status">Status</string>
+    <string name="item_value_finish">Finish counter reading</string>
+    <string name="item_value_start">Start counter reading</string>
+    <string name="empty">There are no records</string>
+    <string name="item_sum_total">Total sum</string>
+    <string name="has_change_wanna_save">Data have been change.\n\nDo you do want save change?</string>
+    <string name="canceled_tab_name">Canceled</string>
+    <string name="action_contacts">Contacts</string>
+
+    <!-- названия вкладок  ContactActivity -->
+    <string name="team_tab_name">My team</string>
+    <string name="contact_tab_name">All contacts</string>
+    <string name="no_team">Team is not formed</string>
+    <string name="action_clear_members">Clear members</string>
+    <string name="action_show_sqlite_debug">Open sqlite debug</string>
+    <string name="action_clear_sqlite_debug">Clear SQLite debug</string>
+    <string name="item_person">Person</string>
+    <string name="settings1">aesfg</string>
+    <string name="start_test_activity">Start test activity</string>
+    <string name="set_default_currency">Default currency</string>
+    <string name="set_using_different_currency">Use different currency</string>
+    <string name="receipt_currency">Currency of receipt</string>
+    <string name="rate_currency">Currency rate</string>
+    <string name="action_make_done">Make done</string>
+    <string name="new_list_for_the_unfinished">New list for the unfinished</string>
+    <string name="action_backup">Backup data</string>
+    <string name="action_get_backup">Get backup list</string>
+
+</resources>
