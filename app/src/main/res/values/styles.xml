@@ -1,0 +1,87 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat">
+
+        <!-- item name="colorAccent">@color/colorAccent</item-->
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!-- item name="colorAccent">@color/colorAccent</item -->
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <!--style name="Spinner">
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style -->
+
+    <!--style name="Spinner" parent="Widget.AppCompat.Spinner.DropDown">
+        <item name="android:background">@drawable/spinner_frame_style</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:layout_marginRight">2dp</item>
+        <item name="android:drawableRight">@android:drawable/list_selector_background</item>
+    </style -->
+    <style name="EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/text_frame_edit_style</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:layout_marginRight">2dp</item>
+    </style>
+
+    <style name="EditText1">
+        <item name="android:background">@drawable/bg_style</item>
+        <item name="android:padding">@dimen/space_8</item>
+        <item name="android:drawablePadding">@dimen/space_16</item>
+        <item name="android:fontFamily">@font/raleway_regular</item>
+        <item name="android:textColorHint">@color/hint_color_dark</item>
+        <item name="android:textColor">@color/title_color_darker</item>
+    </style>
+
+    <style name="MySpinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@drawable/bg_style</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:paddingTop">@dimen/space_8</item>
+        <item name="android:paddingBottom">@dimen/space_8</item>
+        <item name="android:drawableRight">@drawable/ic_baseline_arrow_drop_down_24</item>
+        <item name="android:drawablePadding">@dimen/space_16</item>
+        <item name="android:fontFamily">@font/raleway_regular</item>
+        <item name="android:textColorHint">@color/hint_color_dark</item>
+        <item name="android:textColor">@color/title_color_darker</item>
+        <item name="android:textSize">@dimen/title_font_size</item>
+    </style>
+
+    <style name="EditTextCompact" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/text_frame_edit_compact_style</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:layout_marginRight">2dp</item>
+    </style>
+
+    <style name="MyCircleImageView">
+        <item name="android:background">@drawable/circle_image</item>
+    </style>
+
+    <dimen name="title_font_size">18sp</dimen>
+</resources>

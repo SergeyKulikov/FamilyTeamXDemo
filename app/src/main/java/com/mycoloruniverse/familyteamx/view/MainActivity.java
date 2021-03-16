@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
 
         // initProgressBar();
 
-        // presenter.loadTaskList().subscribeOn(Schedule.io());
+        //presenter.loadTaskList().subscribeOn(Schedule.io());
     }
 
     @Override
@@ -151,8 +151,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
                     presenter.prepareDataForTab(tabHost.getCurrentTab());
                 })).
                 subscribeOn(Schedulers.io()).  // автомматическое создание потоков
-                observeOn(AndroidSchedulers.mainThread());//. // венуть всё в главный поток
-        //subscribe(); // подписаться
+                observeOn(AndroidSchedulers.mainThread()); // венуть всё в главный поток
+
     }
 
     private void initProgressBar() {
@@ -173,15 +173,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
 
     @Override
     public void showProgressBar() {
-
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
-
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     private void initUI() {
+        progressBar = findViewById(R.id.progressBar);
+
         tabHost = findViewById(R.id.tabHost);
         tabHost.setup();
 
@@ -210,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RESULT_OK) {
+        if (resultCode != RESULT_OK) {
             return;
         }
 
@@ -220,11 +222,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
                     return;
                 }
 
-                Task task = (Task) data.getParcelableExtra(TASK_OBJECT);
+                Task task = data.getParcelableExtra(TASK_OBJECT);
                 presenter.addTask(task);
                 break;
             default:
                 Log.e(TAG, "Unexpected result on request code: IDD_TASK_ADD");
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        presenter.closeRX();
     }
 }

@@ -32,14 +32,15 @@
 
             <TabWidget
                 android:id="@android:id/tabs"
+                android:fontFamily="@font/raleway_black"
+                android:textColor="@color/title_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></TabWidget>
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/holo_orange_light">
+                android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycle_view"

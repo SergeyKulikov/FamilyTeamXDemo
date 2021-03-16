@@ -6,13 +6,14 @@ public interface Defines {
     int TYPE_UTILITIES = 2;
     int TYPE_TRAVEL_LIST = 3;
 
+    int IDD_STATUS_NON = -100;
     int IDD_STATUS_CLOSED = -4;
     int IDD_STATUS_NOT_CLOSED = -3;
     int IDD_STATUS_NOT_CANCELED = -2;
     int IDD_STATUS_ALL = -1;
     int IDD_STATUS_PROGRESS = 0;
     int IDD_STATUS_DONE = 1;
-    int IDD_STATUS_CANCELED = 2;
+    int IDD_STATUS_CANCELLED = 2;
     int IDD_CHOOSE_CONTACTS = 3;
 
 
@@ -25,4 +26,5 @@ public interface Defines {
     int IDD_TASK_ITEM_DEL = 3;
 
     String TASK_OBJECT = "task_obj";
+    String TASK_ITEM_OBJECT = "task_item_obj";
 }

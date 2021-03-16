@@ -52,6 +52,11 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         this.currentTaskType = currentTask.getType();
     }
 
+    public TaskItemAdapter(Context context) {
+        this.taskItemList = new ArrayList<>();
+        this.context = context;
+    }
+
     public static Activity getActivityFromView(View view) {
         Context context = view.getContext();
         while (context instanceof ContextWrapper) {
@@ -67,9 +72,10 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         return currentPosition;
     }
 
-    public void setTaskItemList(Task currentTask) {
+    public void setData(Task currentTask) {
         this.taskItemList.clear();
         this.taskItemList.addAll(currentTask.getItems());
+
         this.taskGuid = currentTask.getGuid();
         this.currentTaskType = currentTask.getType();
     }
@@ -264,13 +270,13 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
 
             context = itemView.getContext();
 
-            task_item_icon = (ImageView) itemView.findViewById(R.id.task_item_icon);
-            ivEditTaskItem = (ImageView) itemView.findViewById(R.id.ivEditTaskItem);
-            content = (TextView) itemView.findViewById(R.id.content);
+            task_item_icon = itemView.findViewById(R.id.task_item_icon);
+            ivEditTaskItem = itemView.findViewById(R.id.ivEditTaskItem);
+            content = itemView.findViewById(R.id.content);
             // content_description = (TextView) itemView.findViewById(R.id.content_description);
-            llNode = (ConstraintLayout) itemView.findViewById(R.id.task_notes_list);
+            llNode = itemView.findViewById(R.id.task_notes_list);
             // llSelectedITasktem = (LinearLayout) itemView.findViewById(R.id.llSelectedITasktem);
-            values = (TextView) itemView.findViewById(R.id.values);
+            values = itemView.findViewById(R.id.values);
 
             // itemView.setOnCreateContextMenuListener(this); // необходимо для контекстного меню
 

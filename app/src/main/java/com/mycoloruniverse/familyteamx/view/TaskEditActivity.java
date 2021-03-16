@@ -1,25 +1,20 @@
 package com.mycoloruniverse.familyteamx.view;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,31 +25,26 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mycoloruniverse.familyteamx.Common;
 import com.mycoloruniverse.familyteamx.Defines;
 import com.mycoloruniverse.familyteamx.R;
+import com.mycoloruniverse.familyteamx.SpinnerAction;
 import com.mycoloruniverse.familyteamx.TaskItemEditActivity;
-import com.mycoloruniverse.familyteamx.model.Task;
 import com.mycoloruniverse.familyteamx.model.TaskItem;
+import com.mycoloruniverse.familyteamx.presenter.TaskEditActivityPresenter;
 
-public class TaskEditActivity extends AppCompatActivity implements Defines {
+public class TaskEditActivity extends AppCompatActivity implements ITaskEditActivityView, Defines {
+    private final String TAG = TaskEditActivity.class.getSimpleName();
 
-    private FloatingActionButton fabDetail;
+    private TaskEditActivityPresenter presenter;
 
+    private FloatingActionButton fabAddTaskDetailItem;
     private EditText etTaskTitle;
-    private TextView tvTaskTitle;
     private EditText etTaskSum;
     private CheckBox chbDivideSum;
     private Spinner sprTaskType;
-
-    // private LinearLayout llFamilyList;
-
-    private RadioGroup rgProcess;
-    private RadioButton rbProcess, rbDone;
-
-    private Intent intentInput;
-    private Task currentTask;
-    // private Common common = new Common();
+    private RadioGroup rgProgress;
+    private RadioButton rbInProgress, rbDone, rbCancelled;
+    private Button btnTaskCommit;
 
     private TaskItemAdapter taskItemAdapter;
-
     private RecyclerView taskItemsRecycleView;
 
     @Override
@@ -62,8 +52,8 @@ public class TaskEditActivity extends AppCompatActivity implements Defines {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_edit);
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
+        // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        presenter = new TaskEditActivityPresenter(this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -78,19 +68,31 @@ public class TaskEditActivity extends AppCompatActivity implements Defines {
             */
         }
 
+        initUI();
 
-        intentInput = getIntent(); // получили данные
-        //currentTask = (Task) getIntent().getSerializableExtra( "classTask" );
-        currentTask = getIntent().getParcelableExtra(TASK_OBJECT);
+        presenter.setTask(getIntent().getParcelableExtra(TASK_OBJECT));
+        updateView();
 
-        /*
-        if (currentTask == null) {
-            currentTask = new Task( common.genGuid(), "", TYPE_FREE_CONTENT );
-        }
-        */
 
-        etTaskTitle = (EditText) findViewById(R.id.etTaskTitle);
-        etTaskTitle.setText(currentTask.getTitle());
+        // выделяем элемент
+        // sprTaskType.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+        // sprTaskType.setSelection((currentTask.getType() - 1));
+        // устанавливаем обработчик нажатия
+
+
+        //etTaskSum = (EditText) findViewById(R.id.etTaskSum);
+        // etTaskSum.setText(Common.DoubleToStr(currentTask.getSum(), 2));
+        // etTaskSum.setEnabled(!currentTask.isDivide_sum());
+        // etTaskSum.setSelectAllOnFocus(true);
+
+
+        // передали в адаптер детальки из currentTask
+
+
+    }
+
+    private void initUI() {
+        etTaskTitle = findViewById(R.id.etTaskTitle);
         //etTaskTitle.setSelectAllOnFocus(true);
         etTaskTitle.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
@@ -100,125 +102,67 @@ public class TaskEditActivity extends AppCompatActivity implements Defines {
             }
         });
 
+        rgProgress = findViewById(R.id.rgProgress);
 
-        /* Скрываем группу если есть детали. Иначе показываем группу. */
-        rgProcess = (RadioGroup) findViewById(R.id.rgProcess);
-        rbProcess = (RadioButton) findViewById(R.id.rbProcessTask);
-        rbDone = (RadioButton) findViewById(R.id.rbDoneTask);
+        rbInProgress = findViewById(R.id.rbInProgress);
+        rbDone = findViewById(R.id.rbDoneTask);
+        rbCancelled = findViewById(R.id.rbDoneTask);
 
-        rbProcess.setChecked(!currentTask.isDone());
-        rbDone.setChecked(currentTask.isDone());
-
-        if (currentTask.getItems().size() == 0) {
-            rgProcess.setVisibility(View.VISIBLE);
-
-        } else {
-            rgProcess.setVisibility(View.GONE);
-        }
-
-
-        // tvTaskTitle = (TextView) findViewById( R.id.tvTaskTitle );
-        // tvTaskTitle.setText( currentTask.getTitle() );
-
-        /*
-        if (currentTask.getTitle().equals("")) {
-            //etTaskTitle.setVisibility(View.INVISIBLE);
-            tvTaskTitle.setVisibility(View.VISIBLE);
-        } else {
-            //etTaskTitle.setVisibility(View.VISIBLE);
-            tvTaskTitle.setVisibility(View.INVISIBLE);
-        }
-        */
-
-        // Log.d( "FTEAM", "ID: " + currentTask.getId() );
-
-        // llFamilyList = (LinearLayout) findViewById( R.id.llFamilyList );
-
-        /*
-
-        btnOk = (Button) findViewById( R.id.btnOk );
-        btnOk.setOnClickListener( new View.OnClickListener() {
+        fabAddTaskDetailItem = findViewById(R.id.fabAddTaskItem);
+        fabAddTaskDetailItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // Подтверждаем, что изменения приняты и отправляем data
-                setResult( RESULT_OK, prepateTaskIntent() );
-                finish();
-            }
-        } );
-
-        btnCancel = (Button) findViewById( R.id.btnCancelYesNoDlg );
-        btnCancel.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setResult( RESULT_CANCELED );
-                finish();
-            }
-        } );
-
-         */
-
-
-        fabDetail = findViewById(R.id.fabAddTaskItem);
-        fabDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TaskItem item = new TaskItem("", null, "-");
-                currentTask.getItems().add(item);
-
                 // сразу запускаем редактирование детальки
                 Intent taskItemActivity = new Intent(getApplicationContext(),
                         TaskItemEditActivity.class
                 );
-                taskItemActivity.putExtra("classTaskItem", item);
-                startActivityForResult(taskItemActivity, IDD_TASK_ITEM_EDIT);
+                taskItemActivity.putExtra(TASK_ITEM_OBJECT, presenter.addTaskItem());
+                startActivityForResult(taskItemActivity, IDD_TASK_ITEM_ADD);
 
-                refreshDetails();
-                /*
-                taskItemAdapter.setTaskItemList( currentTask );
-                taskItemAdapter.notifyDataSetChanged();
-                taskItemAdapter.notifyItemChanged( taskItemAdapter.getCurrentPosition() );
-                */
+                // refreshDetails();
             }
         });
 
-        chbDivideSum = (CheckBox) findViewById(R.id.chbDivideSum);
-        chbDivideSum.setChecked(currentTask.isDivide_sum());
+
+        chbDivideSum = findViewById(R.id.chbDivideSum);
         chbDivideSum.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                currentTask.setDivide_sum(isChecked);
-                etTaskSum.setText(Common.DoubleToStr(currentTask.getSum(), 2));
-                etTaskSum.setEnabled(!currentTask.isDivide_sum());
+                // btnTaskCommit.setEnabled(isChecked);
+                presenter.setDivideSum(isChecked);
+                updateView();
+
+                // presenter.setDivideSum(isChecked);
+
+                // etTaskSum.setText(Common.DoubleToStr(presenter.getSum(), 2));
+                // etTaskSum.setEnabled(!presenter.isDivideSum());
 
                 /*
                 taskItemAdapter.setTaskItemList( currentTask );
                 taskItemAdapter.setDevideSumm( currentTask.isDevide_sum() );
                 taskItemAdapter.notifyDataSetChanged();
                 */
-                refreshDetails();
+                // refreshDetails();
 
                 // saveCurrentTask();
                 // taskItemAdapter.notifyItemChanged( taskItemAdapter.getCurrentPosition() );
             }
         });
 
-        ArrayAdapter<String> adapter_type = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item,
-                new String[]{"Free content", "Market place", "Utilities"}
+
+        // Тип задачи
+        sprTaskType = findViewById(R.id.sprTaskType);
+        new SpinnerAction("Select your task type",
+                new String[]{
+                        getString(R.string.free_content),
+                        getString(R.string.market),
+                        getString(R.string.utilities)},
+                sprTaskType
         );
-        adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        sprTaskType = (Spinner) findViewById(R.id.sprTaskType);
-        sprTaskType.setAdapter(adapter_type);
-        // загоspinnerловок
-        sprTaskType.setPrompt("Title");
-        // выделяем элемент
 
-        sprTaskType.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
-
-        sprTaskType.setSelection((currentTask.getType() - 1));
-        // устанавливаем обработчик нажатия
+        /*
         sprTaskType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -231,22 +175,10 @@ public class TaskEditActivity extends AppCompatActivity implements Defines {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
+         */
 
 
-        switch (currentTask.getType()) {
-            case TYPE_FREE_CONTENT:
-                //sprTaskType.setChecked( currentTask.getType() );
-                break;
-            case TYPE_MARKET:
-                break;
-            case TYPE_UTILITIES:
-                break;
-        }
-
-        etTaskSum = (EditText) findViewById(R.id.etTaskSum);
-        etTaskSum.setText(Common.DoubleToStr(currentTask.getSum(), 2));
-        etTaskSum.setEnabled(!currentTask.isDivide_sum());
-        etTaskSum.setSelectAllOnFocus(true);
+        etTaskSum = findViewById(R.id.etTaskSum);
         etTaskSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
@@ -254,48 +186,48 @@ public class TaskEditActivity extends AppCompatActivity implements Defines {
                 }
             }
         });
-        etTaskSum.addTextChangedListener(new TextWatcher() {
+
+
+        btnTaskCommit = findViewById(R.id.btnTaskCommit);
+        btnTaskCommit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void onClick(View view) {
+                // presenter.saveTask(); //
+                presenter.updateTask();
+                Intent intent = new Intent();
+                intent.putExtra(TASK_OBJECT, presenter.getTask());
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!currentTask.isDivide_sum()) {
-                    currentTask.setSum(Common.StrToDouble(etTaskSum.getText().toString()));
-                    // saveCurrentTask();
-                }
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
 
-        // передали в адаптер детальки из currentTask
-        taskItemAdapter = new TaskItemAdapter(currentTask, getApplicationContext());
 
-        taskItemsRecycleView = (RecyclerView) findViewById(R.id.taskItemsRecicleView);
+        taskItemAdapter = new TaskItemAdapter(getApplicationContext());
+
+        taskItemsRecycleView = findViewById(R.id.taskItemsRecycleView);
         taskItemsRecycleView.setLayoutManager(new LinearLayoutManager(this));
         taskItemsRecycleView.setAdapter(taskItemAdapter);
 
+        /*
+        // Единицы измерения
+        Spinner sprItemUnit = (Spinner) view.findViewById(R.id.sprItemUnit);
+        new SpinnerAction("Tiltle",
+                getApplicationContext().getResources().getStringArray(R.array.units_goods),
+                sprItemUnit
+        );
+
+        // Статусы
+        final Spinner sprItemStatus = (Spinner) view.findViewById(R.id.sprItemStatus);
+        new SpinnerAction("Tiltle",
+                getApplicationContext().getResources().getStringArray(R.array.task_status_item_values),
+                sprItemStatus
+        );
+
+         */
 
     }
 
-    /*
-    private void saveCurrentTask() {
-        if (database == null) {
-            database = new FamilyTeamDB(
-                    getApplicationContext(), FTEAM_DB_NAME, null, FTEAM_DB_VER
-            ); // Открываем БД, если ее нет, то она создается
-        }
-
-        database.saveTask( currentTask );
-    }
-
-     */
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -331,16 +263,16 @@ public class TaskEditActivity extends AppCompatActivity implements Defines {
 
 
                     // Заменяем деталь
-                    if (currentTask.resetItem(currentTaskItem) == -1) {
-                        // если не заменилось, то выводим дебуг
-                        //Log.e( FTEAM_LOG, "Rewrite item of task has failed!\n   => Item ID: " +
-                        //        currentTaskItem.getGuid() +
-                        //        "; Master ID: " + currentTask.getGuid() );
-                        break;
-                    } //else {
+                    //if (currentTask.resetItem(currentTaskItem) == -1) {
+                    // если не заменилось, то выводим дебуг
+                    //Log.e( FTEAM_LOG, "Rewrite item of task has failed!\n   => Item ID: " +
+                    //        currentTaskItem.getGuid() +
+                    //        "; Master ID: " + currentTask.getGuid() );
+                    //    break;
+                    //} //else {
                     //  saveCurrentTask();
                     //}
-                    refreshDetails();
+                    // refreshDetails();
                 }
                 break;
         }
@@ -348,21 +280,21 @@ public class TaskEditActivity extends AppCompatActivity implements Defines {
 
 
     private void refreshDetails() {
-        taskItemAdapter.setTaskItemList(currentTask);
+        /*
+        taskItemAdapter.setData(currentTask);
         taskItemAdapter.notifyDataSetChanged();
         taskItemAdapter.setDivideSum(currentTask.isDivide_sum());
         etTaskSum.setText(Common.DoubleToStr(currentTask.getSum(), 2));
-        taskItemAdapter.notifyItemChanged(taskItemAdapter.getCurrentPosition());
+        */
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        setResult(RESULT_OK, prepateTaskIntent());
-
+        // setResult(RESULT_OK, prepateTaskIntent());
     }
 
+    /*
     private Intent prepateTaskIntent() {
         currentTask.setTitle(etTaskTitle.getText().toString());
         currentTask.setModified_time(Common.getCurrentDateTimeLong());
@@ -375,15 +307,87 @@ public class TaskEditActivity extends AppCompatActivity implements Defines {
         return intent;
     }
 
+     */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                setResult(RESULT_OK, prepateTaskIntent());
+
+                // setResult(RESULT_OK, );
                 onBackPressed();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void updateView() {
+        etTaskTitle.setText(presenter.getTitle());
+
+        etTaskSum.setEnabled(presenter.isDivideSum());
+        if (presenter.isDivideSum()) {
+            etTaskSum.setText(Common.DoubleToStr(presenter.getSum(), 2));
+        } else {
+            // Не обнуляем суммы по позициям, а то вдруг человек передумал
+            etTaskSum.setText(Common.DoubleToStr(0.00, 2));
+        }
+
+        sprTaskType.setSelection(presenter.getType());
+
+        switch (presenter.getStatus()) {
+            case IDD_STATUS_PROGRESS:
+                rgProgress.check(R.id.rbInProgress);
+                break;
+            case IDD_STATUS_DONE:
+                rgProgress.check(R.id.rbDoneTask);
+                break;
+            case IDD_STATUS_CLOSED:
+                rgProgress.check(R.id.rbCancelledTask);
+                break;
+        }
+
+
+        /*
+        if (presenter.getItemCount() == 0) {
+            rgProcess.setVisibility(View.VISIBLE);
+        } else {
+            rgProcess.setVisibility(View.GONE);
+        }
+         */
+
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public int getStatus() {
+        int id = rgProgress.getCheckedRadioButtonId();
+        switch (id) {
+            case R.id.rbInProgress:
+                return IDD_STATUS_PROGRESS;
+            case R.id.rbDoneTask:
+                return IDD_STATUS_DONE;
+            case R.id.rbCancelledTask:
+                return IDD_STATUS_CANCELLED;
+            default:
+                return IDD_STATUS_NON;
+        }
+    }
+
+    @Override
+    public boolean getDivideSum() {
+        return chbDivideSum.isChecked();
+    }
+
+    @Override
+    public TaskItemAdapter getTaskItemAdapter() {
+        return taskItemAdapter;
+    }
+
+    @Override
+    public String getTaskTitle() {
+        return etTaskTitle.getText().toString();
+    }
+
 }

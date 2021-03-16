@@ -22,23 +22,7 @@ import java.util.List;
 
 @Entity
 public class Task extends BaseRecord implements Parcelable, Defines {
-    public static final Creator<Task> CREATOR = new Creator<Task>() {
-        @Override
-        public Task createFromParcel(Parcel in) {
-            return new Task(in);
-        }
 
-        @Override
-        public Task[] newArray(int size) {
-            return new Task[size];
-        }
-    };
-    @Ignore
-    private final static String TAG = Task.class.getSimpleName();
-    @Ignore
-    private final int TEAM_LIMIT = 5;
-    @Ignore
-    private final List<TaskItem> items; // Позиции задачи
     private String creator_guid;  // Кто создал запись
     private long created_time;    // Дата создания
     private long modified_time;   // Дата модификации
@@ -55,8 +39,26 @@ public class Task extends BaseRecord implements Parcelable, Defines {
     private boolean hasChange;            // Произошли изменения
     private String weather;
     private String location;
+
+    public static final Creator<Task> CREATOR = new Creator<Task>() {
+        @Override
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
     @Ignore
     private String[] members;    // Члены команды ()
+    @Ignore
+    private final static String TAG = Task.class.getSimpleName();
+    @Ignore
+    private final int TEAM_LIMIT = 5;
+    @Ignore
+    private final List<TaskItem> items; // Позиции задачи
 
     public Task(String creator_guid, String title, int type) {
         this.creator_guid = com.mycoloruniverse.familyteamx.Preferences.getUserGuid();
@@ -103,26 +105,6 @@ public class Task extends BaseRecord implements Parcelable, Defines {
         this.location = "";
     }
 
-    protected Task(Parcel in) {
-        creator_guid = in.readString();
-        created_time = in.readLong();
-        modified_time = in.readLong();
-        close_time = in.readLong();
-        done = in.readByte() != 0;
-        canceled = in.readByte() != 0;
-        sum = in.readDouble();
-        divide_sum = in.readByte() != 0;
-        type = in.readInt();
-        status = in.readInt();
-        currency_id = in.readString();
-        currency_rate = in.readDouble();
-        updateDone = in.readByte() != 0;
-        hasChange = in.readByte() != 0;
-        weather = in.readString();
-        location = in.readString();
-        members = in.createStringArray();
-        items = in.createTypedArrayList(TaskItem.CREATOR);
-    }
 
     public static String getTAG() {
         return TAG;
@@ -292,22 +274,27 @@ public class Task extends BaseRecord implements Parcelable, Defines {
         return this.status;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
-        switch (status) {
-            case IDD_STATUS_PROGRESS:
-                this.done = false;
-                this.canceled = false;
-                break;
-            case IDD_STATUS_DONE:
-                this.done = true;
-                this.canceled = false;
-                break;
-            case IDD_STATUS_CANCELED:
-                this.done = false;
-                this.canceled = true;
-                break;
-        }
+    protected Task(Parcel in) {
+        setGuid(in.readString());
+        creator_guid = in.readString();
+        setTitle(in.readString());
+        created_time = in.readLong();
+        modified_time = in.readLong();
+        close_time = in.readLong();
+        done = in.readByte() != 0;
+        canceled = in.readByte() != 0;
+        sum = in.readDouble();
+        divide_sum = in.readByte() != 0;
+        type = in.readInt();
+        status = in.readInt();
+        currency_id = in.readString();
+        currency_rate = in.readDouble();
+        updateDone = in.readByte() != 0;
+        hasChange = in.readByte() != 0;
+        weather = in.readString();
+        location = in.readString();
+        members = in.createStringArray();
+        items = in.createTypedArrayList(TaskItem.CREATOR);
     }
 
     public String getWeather() {
@@ -444,9 +431,29 @@ public class Task extends BaseRecord implements Parcelable, Defines {
         return 0;
     }
 
+    public void setStatus(int status) {
+        this.status = status;
+        switch (status) {
+            case IDD_STATUS_PROGRESS:
+                this.done = false;
+                this.canceled = false;
+                break;
+            case IDD_STATUS_DONE:
+                this.done = true;
+                this.canceled = false;
+                break;
+            case IDD_STATUS_CANCELLED:
+                this.done = false;
+                this.canceled = true;
+                break;
+        }
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(getGuid());
         dest.writeString(creator_guid);
+        dest.writeString(getTitle());
         dest.writeLong(created_time);
         dest.writeLong(modified_time);
         dest.writeLong(close_time);
@@ -465,5 +472,6 @@ public class Task extends BaseRecord implements Parcelable, Defines {
         dest.writeStringArray(members);
         dest.writeTypedList(items);
     }
+
 
 }

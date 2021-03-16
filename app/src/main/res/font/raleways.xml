@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <font
+        android:font="@font/raleway_black"
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        tools:targetApi="o" />
+    <font
+        android:font="@font/raleway_blackitalic"
+        android:fontStyle="italic"
+        android:fontWeight="400"
+        tools:targetApi="o" />
+    <font
+        android:font="@font/raleway_bold"
+        android:fontStyle="normal"
+        android:fontWeight="600"
+        tools:targetApi="o" />
+    <font
+        android:font="@font/raleway_bolditalic"
+        android:fontStyle="italic"
+        android:fontWeight="600"
+        tools:targetApi="o" />
+
+    <font
+        app:font="@font/raleway_black"
+        app:fontStyle="normal"
+        app:fontWeight="400" />
+    <font
+        app:font="@font/raleway_blackitalic"
+        app:fontStyle="italic"
+        app:fontWeight="400" />
+    <font
+        app:font="@font/raleway_bold"
+        app:fontStyle="normal"
+        app:fontWeight="600" />
+    <font
+        app:font="@font/raleway_bolditalic"
+        app:fontStyle="italic"
+        app:fontWeight="600" />
+
+</font-family>
+
+

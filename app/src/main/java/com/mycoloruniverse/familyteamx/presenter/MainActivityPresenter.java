@@ -33,6 +33,7 @@ public class MainActivityPresenter implements Defines {
     private final Map<Integer, Integer> statusMap = new HashMap<>();
 
     private final Task task;
+    private Disposable loadRX;
 
     public MainActivityPresenter(MainActivityView view) {
         this.task = new Task();
@@ -40,7 +41,7 @@ public class MainActivityPresenter implements Defines {
 
         statusMap.put(0, IDD_STATUS_PROGRESS);
         statusMap.put(1, IDD_STATUS_DONE);
-        statusMap.put(2, IDD_STATUS_CANCELED);
+        statusMap.put(2, IDD_STATUS_CANCELLED);
     }
 
     private Maybe<List<Task>> loadTaskList(int status) {
@@ -59,21 +60,27 @@ public class MainActivityPresenter implements Defines {
 
     }
 
+    public void closeRX() {
+        loadRX.dispose();
+    }
+
 
     public void prepareDataForTab(int currentTab) {
         // Зная вкладку мы должны получить список задач из БД
         int status_id = statusMap.get(currentTab);
 
-        loadTaskList(status_id)
+        loadRX = loadTaskList(status_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tasks -> {
-
+                    view.showProgressBar();
                     view.getTaskAdapter().setTaskList(tasks);
                     prepareDataForTab(view.getTabHost().getCurrentTab());
+                }, throwable -> {
+                    Log.e(TAG, throwable.getLocalizedMessage());
                 });
 
-
+        view.hideProgressBar();
     }
 
 
