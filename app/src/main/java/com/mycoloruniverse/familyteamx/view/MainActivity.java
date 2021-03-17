@@ -29,6 +29,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.mycoloruniverse.familyteamx.Defines.IDD_TASK_ADD;
+import static com.mycoloruniverse.familyteamx.Defines.TASK_GUID;
 import static com.mycoloruniverse.familyteamx.Defines.TASK_OBJECT;
 
 /**
@@ -91,7 +92,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), TaskEditActivity.class);
-                intent.putExtra(TASK_OBJECT, new Task());
+                //intent.putExtra(TASK_OBJECT, (Task)null); // передаем пустой объект
+
+                // Передадим не объект, а guid. Будет быстрее, тем более он пустой
+                intent.putExtra(TASK_GUID, (String) null); // передаем пустой объект
 
                 startActivityForResult(intent, IDD_TASK_ADD);
             }

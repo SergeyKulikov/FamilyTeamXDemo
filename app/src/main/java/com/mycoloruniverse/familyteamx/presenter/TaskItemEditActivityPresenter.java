@@ -15,14 +15,39 @@ public class TaskItemEditActivityPresenter {
     private final String TAG = TaskItemEditActivityPresenter.class.getSimpleName();
     private final FamilyTeamDao dao = FamilyTeamApp.getInstance().getDao().getDaoDatabase();
 
-    private TaskItemEditActivityPresenter instance;
+    // private static TaskItemEditActivityPresenter instance;
     private final ITaskItemEditActivityView view;
 
     private TaskItem taskItem;
+    private String task_guid;
 
-    public TaskItemEditActivityPresenter(ITaskItemEditActivityView view) {
+    public TaskItemEditActivityPresenter(ITaskItemEditActivityView view, String taskGUID,
+                                         String taskItemGUID) {
+        if (taskItemGUID == null) { //
+            this.task_guid = taskGUID;
+            this.taskItem = new TaskItem(this.task_guid); // новая деталь сразу привязываем к родителю
+        } else {
+            dao.rx_loadTaskItem(taskItemGUID)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(item -> {
+                        taskItem = item;
+                    }, throwable -> {
+                        Log.e(TAG, throwable.getLocalizedMessage());
+                    }).dispose();
+        }
         this.view = view;
     }
+
+    /*
+    public static TaskItemEditActivityPresenter getInstance(ITaskItemEditActivityView view) {
+        if (instance == null) {
+            instance = new TaskItemEditActivityPresenter(view);
+        }
+
+        return instance;
+    }
+    */
 
     public String[] getGoods() {
         final String[][] strarray = {new String[0]};
@@ -58,6 +83,12 @@ public class TaskItemEditActivityPresenter {
     }
 
     public void setTaskItem(TaskItem taskItem) {
-        this.taskItem = taskItem;
+        if (taskItem == null) {
+            this.taskItem = new TaskItem();
+        } else {
+            this.taskItem = taskItem;
+        }
+        this.view.updateView();
     }
+
 }

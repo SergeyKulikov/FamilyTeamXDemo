@@ -162,7 +162,7 @@ public class Task extends BaseRecord implements Parcelable, Defines {
         return items;
     }
 
-    void setItems(List<TaskItem> items) {
+    public void setItems(List<TaskItem> items) {
         this.items.clear();
         this.items.addAll(items);
     }

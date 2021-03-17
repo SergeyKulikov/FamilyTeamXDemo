@@ -3,6 +3,7 @@ package com.mycoloruniverse.familyteamx.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 
@@ -15,7 +16,9 @@ import org.json.JSONObject;
 
 @Entity
 public class TaskItem extends BaseRecord implements Parcelable {
-    public boolean updateDone;
+    @NonNull
+    private String task_guid;
+    private boolean updateDone;
     private String description;
     private String unit;
     private double value;
@@ -64,6 +67,20 @@ public class TaskItem extends BaseRecord implements Parcelable {
 
     public TaskItem() {
         // this.guid = Common.genGuid();
+        this.setTitle("");
+        this.description = "";
+        this.unit = "-";
+        this.value = 0.00;
+        this.sum = 0.00;
+        this.done = false;
+        this.modify_time = 0;
+        this.canceled = false;
+        this.close_maker_guid = "";
+        this.utilities_ident = 0;
+    }
+
+    public TaskItem(String guid) {
+        this.setTask_guid(guid);
         this.setTitle("");
         this.description = "";
         this.unit = "-";
@@ -347,4 +364,12 @@ public class TaskItem extends BaseRecord implements Parcelable {
         weather = in.readString();
     }
 
+    @NonNull
+    public String getTask_guid() {
+        return task_guid;
+    }
+
+    public void setTask_guid(@NonNull String task_guid) {
+        this.task_guid = task_guid;
+    }
 }

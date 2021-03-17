@@ -30,5 +30,6 @@ public interface Defines {
     String TASK_ITEM_OBJECT = "task_item_obj";
 
     String TASK_TYPE = "task_type";
-    String GUID = "guid";
+    String TASK_GUID = "task_guid";
+    String TASK_ITEM_GUID = "task_item_guid";
 }

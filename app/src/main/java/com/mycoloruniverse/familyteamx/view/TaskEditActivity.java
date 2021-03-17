@@ -54,7 +54,7 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         setContentView(R.layout.activity_property_task);
 
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        presenter = new TaskEditActivityPresenter(this);
+        presenter = new TaskEditActivityPresenter(this, getIntent().getStringExtra(TASK_GUID));
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -70,9 +70,8 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         }
 
         initUI();
-        createTabs();
 
-        presenter.setTask(getIntent().getParcelableExtra(TASK_OBJECT));
+        createTabs();
         updateView();
 
 
@@ -105,6 +104,8 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
 
         TabHost.TabSpec tabSpec;
 
+        // Эта закладка первоначально должна быть скрыта
+        // она появлется только если Task сохранена в базе данных
         tabSpec = tabHost.newTabSpec("tag1");
         tabSpec.setContent(R.id.content_tab0);
         tabSpec.setIndicator("List");
@@ -154,7 +155,9 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
                 Intent taskItemActivity = new Intent(getApplicationContext(),
                         TaskItemEditActivity.class
                 );
-                taskItemActivity.putExtra(TASK_ITEM_OBJECT, presenter.addTaskItem());
+                taskItemActivity.putExtra(TASK_GUID, presenter.getTaskGuid()); // guid задачи
+                taskItemActivity.putExtra(TASK_ITEM_GUID, (String) null); // guid детальки = null
+                taskItemActivity.putExtra(TASK_TYPE, presenter.getType()); // guid детальки = null
                 startActivityForResult(taskItemActivity, IDD_TASK_ITEM_ADD);
 
                 // refreshDetails();

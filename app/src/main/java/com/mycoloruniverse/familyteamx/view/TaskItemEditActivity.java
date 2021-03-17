@@ -3,7 +3,6 @@ package com.mycoloruniverse.familyteamx.view;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -47,23 +46,17 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // presenter = TaskItemEditActivityPresenter.getInstance(this);
+        presenter = new TaskItemEditActivityPresenter(this,
+                getIntent().getStringExtra(TASK_GUID),
+                getIntent().getStringExtra(TASK_ITEM_GUID)
+        );
 
-        intentIn = getIntent();
-        int currentTaskType = intentIn.getIntExtra(TASK_TYPE, TYPE_FREE_CONTENT);
-        String currentTaskGuid = intentIn.getStringExtra(GUID);
-
-        if (currentTaskGuid.isEmpty()) {
-            Log.e(TAG, "Unknown task have been got.");
-            return;
-        }
-
-        presenter = new TaskItemEditActivityPresenter(this);
-        presenter.setTaskItem(intentIn.getParcelableExtra(TASK_ITEM_OBJECT));
         if (currentTaskItem == null) {
             currentTaskItem = new TaskItem();
         }
 
-        switch (currentTaskType) {
+        switch (getIntent().getIntExtra(TASK_TYPE, TYPE_FREE_CONTENT)) {
             case TYPE_FREE_CONTENT:
                 setContentView(R.layout.activity_task_item_free_edit);
                 break;
@@ -76,6 +69,7 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
         }
 
         InitUI_market();
+        updateView();
 
 
         /*
@@ -100,11 +94,7 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
             );
 
         }
-
-
-         */
-
-
+        */
     }
 
     private void InitUI_market() {
@@ -116,21 +106,15 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
         );
 
         actvItemName = findViewById(R.id.actvItemName);
-        actvItemName.setText(currentTaskItem.getContent());
-
-
         String[] goodList = presenter.getGoods();
-        ArrayAdapter product_list_adapter = new ArrayAdapter(this,
+        ArrayAdapter<String> product_list_adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1,
                 goodList
         );
-
+        actvItemName.setText(currentTaskItem.getContent());
         actvItemName.setAdapter(product_list_adapter);
         actvItemName.setThreshold(1);
 
-        // это для варианта multi
-        //actvItemName.setAdapter(product_list_adapter);
-        //actvItemName.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
         etItemValue = findViewById(R.id.etItemValue);
         etItemValue.setText(Common.DoubleToStr(currentTaskItem.getValue(), 3));
@@ -173,12 +157,7 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
                 // Запоняем объект Task измененными данными
                 currentTaskItem.setContent(actvItemName.getText().toString());
 
-                currentTaskItem.setDone(rbDoneItem.isChecked());
-                currentTaskItem.setCanceled(rbCanceledItem.isChecked());
-                currentTaskItem.setSum(Common.StrToDouble(etItemSum.getText().toString()));
-                currentTaskItem.setValue(Common.StrToDouble(etItemValue.getText().toString()));
-                currentTaskItem.setModify_time(Common.getCurrentDateTimeLong());
-                currentTaskItem.setUnit(elvItemUnit.getSelectedItem().toString());
+ s               currentTaskItem.setUnit(elvItemUnit.getSelectedItem().toString());
 
                 //currentTaskItem.setModified_time( common.getCurre1ntDateTimeLong() );
 

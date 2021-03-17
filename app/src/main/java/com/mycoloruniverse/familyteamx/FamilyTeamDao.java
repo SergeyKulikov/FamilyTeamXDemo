@@ -14,6 +14,7 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.Single;
 
 @Dao
 public interface FamilyTeamDao {
@@ -31,6 +32,9 @@ public interface FamilyTeamDao {
     @Query("SELECT * FROM Task WHERE status = :status ORDER BY created_time DESC")
     Maybe<List<Task>> rx_loadTaskList(int status);
 
+    @Query("SELECT * FROM Task WHERE guid = :guid")
+    Maybe<Task> rx_loadTask(String guid);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable rx_saveTask(Task task);
 
@@ -39,6 +43,13 @@ public interface FamilyTeamDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable rx_SaveTaskItems(List<TaskItem> items);
+
+    @Query("SELECT * FROM TaskItem WHERE task_guid = :task_guid")
+    Maybe<List<TaskItem>> rx_loadTaskItems(String task_guid);
+
+    @Query("SELECT * FROM TaskItem WHERE guid = :taskItem_guid")
+    Single<TaskItem> rx_loadTaskItem(String taskItem_guid);
+
 
 //    @Query("SELECT * FROM TaskItem WHERE receipt_id = :receipt_id")//
 //    Flowable<List<CartItem>> rx_loadCartItems(Long receipt_id);
