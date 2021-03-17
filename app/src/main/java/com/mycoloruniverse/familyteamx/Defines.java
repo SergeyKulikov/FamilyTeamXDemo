@@ -27,4 +27,6 @@ public interface Defines {
 
     String TASK_OBJECT = "task_obj";
     String TASK_ITEM_OBJECT = "task_item_obj";
+
+    String TASK_TYPE = "task_type";
 }

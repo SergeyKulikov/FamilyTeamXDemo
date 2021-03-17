@@ -20,6 +20,9 @@
         <activity android:name=".view.TaskEditActivity">
 
         </activity>
+        <activity android:name=".view.TaskItemEditActivity">
+
+        </activity>
     </application>
 
 </manifest>

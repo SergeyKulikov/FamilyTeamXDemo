@@ -83,5 +83,9 @@
         <item name="android:background">@drawable/circle_image</item>
     </style>
 
+    <style name="Caption" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:paddingTop">12dp</item>
+    </style>
+
     <dimen name="title_font_size">18sp</dimen>
 </resources>

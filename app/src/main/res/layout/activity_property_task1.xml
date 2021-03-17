@@ -120,18 +120,24 @@
                 android:textColor="@color/title_color" />
         </RadioGroup>
 
+        <TextView
+            android:id="@+id/tvDescription"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/editTextTextMultiLine"
+            style="@style/EditText1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|top"
+            android:hint="@string/describe_your_cancellation_reason"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:textColorHint="@android:color/holo_red_light" />
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnTaskCommit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/raleway_bold"
-        android:paddingVertical="12dp"
-        android:text="@string/commit"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

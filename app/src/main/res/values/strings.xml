@@ -41,8 +41,14 @@
         <item>Carrot</item>
     </string-array>
 
+    <string-array name="task_item_status">
+        <item>In progress</item>
+        <item>Done</item>
+        <item>Cancelled</item>
+    </string-array>
+
     <string-array name="units_goods">
-        <item></item>
+        <item>-</item>
         <item>item</item>
         <item>kilo</item>
         <item>gramm</item>
@@ -191,6 +197,8 @@
     <string name="close_time">Close time</string>
     <string name="modify_time">Modify time</string>
     <string name="empty_date_hint">...</string>
+    <string name="describe_your_cancellation_reason">describe your cancellation reason</string>
+    <string name="product">Product name</string>
 
 
 </resources>

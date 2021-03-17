@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TabHost;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,7 +27,6 @@ import com.mycoloruniverse.familyteamx.Common;
 import com.mycoloruniverse.familyteamx.Defines;
 import com.mycoloruniverse.familyteamx.R;
 import com.mycoloruniverse.familyteamx.SpinnerAction;
-import com.mycoloruniverse.familyteamx.TaskItemEditActivity;
 import com.mycoloruniverse.familyteamx.model.TaskItem;
 import com.mycoloruniverse.familyteamx.presenter.TaskEditActivityPresenter;
 
@@ -50,7 +50,8 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_edit);
+        // setContentView(R.layout.activity_task_edit);
+        setContentView(R.layout.activity_property_task);
 
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         presenter = new TaskEditActivityPresenter(this);
@@ -69,6 +70,7 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         }
 
         initUI();
+        createTabs();
 
         presenter.setTask(getIntent().getParcelableExtra(TASK_OBJECT));
         updateView();
@@ -89,6 +91,42 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         // передали в адаптер детальки из currentTask
 
 
+    }
+
+    private void createTabs() {
+        // Посмотрел в сторону ViewPage2 и остановился на TabHost
+        // Очень удобное формирование различного контента на странце, а в ViewPage2
+        // придется искуственно целое разделить на форагменты. Решил не создавать трудности
+        // на ровном месте. Свайп закладок тоже здесь не к месту.
+
+        TabHost tabHost = findViewById(R.id.tabHost);
+
+        tabHost.setup();
+
+        TabHost.TabSpec tabSpec;
+
+        tabSpec = tabHost.newTabSpec("tag1");
+        tabSpec.setContent(R.id.content_tab0);
+        tabSpec.setIndicator("List");
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("tag2");
+        tabSpec.setContent(R.id.content_tab1);
+        tabSpec.setIndicator("Main");
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("tag3");
+        tabSpec.setContent(R.id.content_tab2);
+        tabSpec.setIndicator("Team");
+        tabHost.addTab(tabSpec);
+
+        tabSpec = tabHost.newTabSpec("tag4");
+        tabSpec.setContent(R.id.content_tab3);
+        tabSpec.setIndicator("Money");
+        tabHost.addTab(tabSpec);
+
+
+        tabHost.setCurrentTab(1);
     }
 
     private void initUI() {
@@ -188,6 +226,7 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         });
 
 
+        /*
         btnTaskCommit = findViewById(R.id.btnTaskCommit);
         btnTaskCommit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,6 +240,7 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
                 finish();
             }
         });
+        */
 
 
         taskItemAdapter = new TaskItemAdapter(getApplicationContext());
@@ -208,6 +248,9 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         taskItemsRecycleView = findViewById(R.id.taskItemsRecycleView);
         taskItemsRecycleView.setLayoutManager(new LinearLayoutManager(this));
         taskItemsRecycleView.setAdapter(taskItemAdapter);
+
+
+
 
         /*
         // Единицы измерения

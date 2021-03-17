@@ -1,4 +1,4 @@
-package com.mycoloruniverse.familyteamx;
+package com.mycoloruniverse.familyteamx.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,9 @@ import android.widget.Spinner;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.mycoloruniverse.familyteamx.Common;
+import com.mycoloruniverse.familyteamx.Defines;
+import com.mycoloruniverse.familyteamx.R;
 import com.mycoloruniverse.familyteamx.model.TaskItem;
 
 import java.util.Arrays;
@@ -33,12 +36,31 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
     private String[] goodList;
 
 
+    private int currentTaskType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*
-        setContentView( R.layout.activity_task_item_edit );
 
+        intentIn = getIntent();
+        currentTaskType = intentIn.getIntExtra(TASK_TYPE, TYPE_FREE_CONTENT);
+        currentTaskItem = intentIn.getParcelableExtra(TASK_ITEM_OBJECT);
+        if (currentTaskItem == null) {
+            currentTaskItem = new TaskItem();
+        }
+
+        switch (currentTaskType) {
+            case TYPE_FREE_CONTENT:
+                setContentView(R.layout.activity_task_item_free_edit);
+                break;
+            case TYPE_MARKET:
+                setContentView(R.layout.activity_task_item_market_edit);
+                break;
+            case TYPE_UTILITIES:
+                setContentView(R.layout.activity_task_item_utility_edit);
+                break;
+        }
+        /*
         intentIn = getIntent();
         currentTaskItem = (TaskItem) getIntent().getSerializableExtra( "classTaskItem" );
 

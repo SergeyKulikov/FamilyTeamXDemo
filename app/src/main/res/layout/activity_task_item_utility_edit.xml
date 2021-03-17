@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="6dp"
+    tools:context="com.mycoloruniverse.familyteamx.view.TaskItemEditActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llTaskItemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvItemName"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/etItemDescriptionUtill"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="top|center"
+                android:lines="3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llItemStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvItemStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingLeft="8dp"
+                android:text="@string/item_status" />
+
+            <Spinner
+                android:id="@+id/sprItemStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llItemValueFinish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvItemValueFinish1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="8dp"
+                android:text="@string/item_value_finish" />
+
+            <EditText
+                android:id="@+id/etItemValueFinish1"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:inputType="numberDecimal"
+                tools:text="1" />
+
+            <EditText
+                android:id="@+id/etItemValueFinish2"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:inputType="numberDecimal"
+                tools:text="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llItemValueStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvItemValueStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="8dp"
+                android:text="@string/item_value_start" />
+
+            <EditText
+                android:id="@+id/etItemValueStart1"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:inputType="numberDecimal"
+                tools:text="1" />
+
+            <EditText
+                android:id="@+id/etItemValueStart2"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:inputType="numberDecimal"
+                tools:text="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llItemValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvItemValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="8dp"
+                android:text="@string/item_value" />
+
+            <EditText
+                android:id="@+id/etItemValue1"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:inputType="numberDecimal"
+                tools:text="1" />
+
+            <EditText
+                android:id="@+id/etItemValue2"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:inputType="numberDecimal"
+                tools:text="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llItemPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvItemPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="8dp"
+                android:text="@string/item_price" />
+
+            <EditText
+                android:id="@+id/etItemPrice1"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:inputType="numberDecimal"
+
+                tools:text="0.00" />
+
+            <EditText
+                android:id="@+id/etItemPrice2"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:inputType="numberDecimal"
+
+                tools:text="0.00" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llItemSum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvItemSum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="8dp"
+                android:text="@string/item_sum" />
+
+            <EditText
+                android:id="@+id/etItemSum1"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:inputType="numberDecimal"
+                tools:text="0.00" />
+
+            <EditText
+                android:id="@+id/etItemSum2"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:inputType="numberDecimal"
+                tools:text="0.00" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llItemSumTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvItemSumTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingLeft="8dp"
+                android:text="@string/item_sum_total" />
+
+            <EditText
+                android:id="@+id/etItemSumTotal"
+                style="@style/EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:gravity="right"
+                android:inputType="numberDecimal"
+                tools:text="0.00" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
