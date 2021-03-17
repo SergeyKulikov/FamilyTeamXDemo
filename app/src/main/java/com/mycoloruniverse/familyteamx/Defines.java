@@ -1,6 +1,7 @@
 package com.mycoloruniverse.familyteamx;
 
 public interface Defines {
+    int TYPE_NON = -1;
     int TYPE_FREE_CONTENT = 0;
     int TYPE_MARKET = 1;
     int TYPE_UTILITIES = 2;

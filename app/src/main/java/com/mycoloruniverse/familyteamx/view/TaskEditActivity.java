@@ -250,25 +250,6 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         taskItemsRecycleView.setAdapter(taskItemAdapter);
 
 
-
-
-        /*
-        // Единицы измерения
-        Spinner sprItemUnit = (Spinner) view.findViewById(R.id.sprItemUnit);
-        new SpinnerAction("Tiltle",
-                getApplicationContext().getResources().getStringArray(R.array.units_goods),
-                sprItemUnit
-        );
-
-        // Статусы
-        final Spinner sprItemStatus = (Spinner) view.findViewById(R.id.sprItemStatus);
-        new SpinnerAction("Tiltle",
-                getApplicationContext().getResources().getStringArray(R.array.task_status_item_values),
-                sprItemStatus
-        );
-
-         */
-
     }
 
 
@@ -389,6 +370,8 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
             case IDD_STATUS_CLOSED:
                 rgProgress.check(R.id.rbCancelledTask);
                 break;
+            default:
+                rgProgress.clearCheck();
         }
 
 
@@ -415,6 +398,21 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
                 return IDD_STATUS_CANCELLED;
             default:
                 return IDD_STATUS_NON;
+        }
+    }
+
+    @Override
+    public int getType() {
+        int id = sprTaskType.getSelectedItemPosition();
+        switch (id) {
+            case 0:
+                return TYPE_FREE_CONTENT;
+            case 1:
+                return TYPE_MARKET;
+            case 2:
+                return TYPE_UTILITIES;
+            default:
+                return TYPE_NON;
         }
     }
 

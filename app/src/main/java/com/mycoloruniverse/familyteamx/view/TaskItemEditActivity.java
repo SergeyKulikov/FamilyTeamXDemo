@@ -3,6 +3,7 @@ package com.mycoloruniverse.familyteamx.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,12 +16,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.mycoloruniverse.familyteamx.Common;
 import com.mycoloruniverse.familyteamx.Defines;
 import com.mycoloruniverse.familyteamx.R;
+import com.mycoloruniverse.familyteamx.SpinnerAction;
 import com.mycoloruniverse.familyteamx.model.TaskItem;
+import com.mycoloruniverse.familyteamx.presenter.TaskItemEditActivityPresenter;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class TaskItemEditActivity extends AppCompatActivity implements Defines {
+    private final String TAG = TaskItemEditActivity.class.getSimpleName();
+    private TaskItemEditActivityPresenter presenter;
+
     private final Common common = new Common();
     private Intent intentIn;
     private TaskItem currentTaskItem;
@@ -60,6 +66,10 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
                 setContentView(R.layout.activity_task_item_utility_edit);
                 break;
         }
+
+        InitUI_market();
+
+
         /*
         intentIn = getIntent();
         currentTaskItem = (TaskItem) getIntent().getSerializableExtra( "classTaskItem" );
@@ -83,21 +93,19 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
             */
         }
 
-/*
-        actvItemName = (AutoCompleteTextView) findViewById( R.id.actvItemName );
-        actvItemName.setText( currentTaskItem.getContent() );
+
+        actvItemName = findViewById(R.id.actvItemName);
+        actvItemName.setText(currentTaskItem.getContent());
 
 
-
-        database = new FamilyTeamDB(
-                getApplicationContext(), FTEAM_DB_NAME, null, FTEAM_DB_VER
-        ); // Открываем БД, если ее нет, то она создается
-        goodList = database.getPrivateGoodListString(); // getPrivateGoodList();
+        goodList = presenter.getGoods(); // getPrivateGoodList();
 
         ArrayAdapter goood_list_adapter = new ArrayAdapter(this,
                 android.R.layout.simple_list_item_1,
                 goodList
         );
+
+        goodList = presenter.getGoods();
 
         actvItemName.setAdapter(goood_list_adapter);
         actvItemName.setThreshold(1);
@@ -106,11 +114,11 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
         //actvItemName.setAdapter(goood_list_adapter);
         //actvItemName.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
-        etItemValue = (EditText) findViewById( R.id.etItemValue );
-        etItemValue.setText( common.DoubleToStr ( currentTaskItem.getValue(), 3 ) );
+        etItemValue = findViewById(R.id.etItemValue);
+        etItemValue.setText(Common.DoubleToStr(currentTaskItem.getValue(), 3));
         etItemValue.setSelectAllOnFocus(true);
-        etItemValue.setOnFocusChangeListener(new View.OnFocusChangeListener(){
-            public void onFocusChange(View v, boolean hasFocus){
+        etItemValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     ((EditText) v).selectAll();
                 }
@@ -118,67 +126,67 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
         });
 
 
-        etItemSum = (EditText) findViewById( R.id.etItemSum );
-        etItemSum.setText( common.DoubleToStr( currentTaskItem.getSum(), 2) );
+        etItemSum = findViewById(R.id.etItemSum);
+        etItemSum.setText(Common.DoubleToStr(currentTaskItem.getSum(), 2));
         etItemSum.setSelectAllOnFocus(true);
-        etItemSum.setOnFocusChangeListener(new View.OnFocusChangeListener(){
-            public void onFocusChange(View v, boolean hasFocus){
+        etItemSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     ((EditText) v).selectAll();
                 }
             }
         });
 
-        rbDoneItem = (RadioButton) findViewById( R.id.rbDoneItem );
-        rbCanceledItem = (RadioButton) findViewById( R.id.rbCanceledItem );
-        rbProcessItem = (RadioButton) findViewById( R.id.rbProcessItem );
+        rbDoneItem = findViewById(R.id.rbDoneItem);
+        rbCanceledItem = findViewById(R.id.rbCanceledItem);
+        rbProcessItem = findViewById(R.id.rbProcessItem);
 
-        rbDoneItem.setChecked( currentTaskItem.isDone() );
-        rbCanceledItem.setChecked( currentTaskItem.isCanceled() );
+        rbDoneItem.setChecked(currentTaskItem.isDone());
+        rbCanceledItem.setChecked(currentTaskItem.isCanceled());
         rbProcessItem.setChecked(!currentTaskItem.isDone() && !currentTaskItem.isCanceled());
 
-        btnOkItem = (Button)findViewById( R.id.btnOkItem );
-        btnOkItem.setOnClickListener( new View.OnClickListener() {
+        btnOkItem = findViewById(R.id.btnOkItem);
+        btnOkItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent data = new Intent();
 
                 // Запоняем объект Task измененными данными
-                currentTaskItem.setContent( actvItemName.getText().toString() );
+                currentTaskItem.setContent(actvItemName.getText().toString());
 
-                currentTaskItem.setDone( rbDoneItem.isChecked() );
-                currentTaskItem.setCanceled( rbCanceledItem.isChecked() );
-                currentTaskItem.setSum( common.StrToDouble(etItemSum.getText().toString()) );
-                currentTaskItem.setValue( common.StrToDouble(etItemValue.getText().toString()) );
-                currentTaskItem.setModify_time( common.getCurrentDateTimeLong() );
-                currentTaskItem.setUnit( elvItemUnit.getSelectedItem().toString());
+                currentTaskItem.setDone(rbDoneItem.isChecked());
+                currentTaskItem.setCanceled(rbCanceledItem.isChecked());
+                currentTaskItem.setSum(Common.StrToDouble(etItemSum.getText().toString()));
+                currentTaskItem.setValue(Common.StrToDouble(etItemValue.getText().toString()));
+                currentTaskItem.setModify_time(Common.getCurrentDateTimeLong());
+                currentTaskItem.setUnit(elvItemUnit.getSelectedItem().toString());
 
                 //currentTaskItem.setModified_time( common.getCurre1ntDateTimeLong() );
 
                 // Засовываем Task в data
-                data.putExtra( "classTaskItem", currentTaskItem );
+                data.putExtra("classTaskItem", currentTaskItem);
 
                 // Подтверждаем, что изменения приняты и отправляем data
-                setResult( RESULT_OK, data );
+                setResult(RESULT_OK, data);
                 finish();
             }
         } );
 
-        btnCancelItem = (Button) findViewById( R.id.btnCancelItem );
-        btnCancelItem.setOnClickListener( new View.OnClickListener() {
+        btnCancelItem = findViewById(R.id.btnCancelItem);
+        btnCancelItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setResult( RESULT_OK );
+                setResult(RESULT_OK);
                 finish();
             }
-        } );
+        });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, getUnits()
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        elvItemUnit = (Spinner) findViewById(R.id.elvItemUnit);
+        elvItemUnit = findViewById(R.id.elvItemUnit);
         elvItemUnit.setAdapter(adapter);
         // загоspinnerловок
         elvItemUnit.setPrompt("Title");
@@ -204,6 +212,15 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
 
 
  */
+    }
+
+    private void InitUI_market() {
+        // Единицы измерения
+        Spinner sprItemUnit = findViewById(R.id.sprItemUnit);
+        new SpinnerAction("Units",
+                getApplicationContext().getResources().getStringArray(R.array.units_goods),
+                sprItemUnit
+        );
     }
 
     private String[] getUnits() {

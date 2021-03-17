@@ -10,4 +10,6 @@ public interface ITaskEditActivityView {
     int getStatus();
 
     boolean getDivideSum();
+
+    int getType();
 }

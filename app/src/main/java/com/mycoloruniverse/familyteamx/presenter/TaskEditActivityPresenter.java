@@ -20,6 +20,7 @@ public class TaskEditActivityPresenter implements Defines {
 
     public void updateTask() {
         task.setTitle(view.getTaskTitle());
+        task.setType(view.getType());
         task.setStatus(view.getStatus());
         task.setDivide_sum(view.getDivideSum());
         // task.setStatus(view.getStatus());
@@ -68,6 +69,10 @@ public class TaskEditActivityPresenter implements Defines {
 
     public int getType() {
         return task.getType();
+    }
+
+    public void setType(int type) {
+        task.setType(type);
     }
 
     public Task getTask() {
