@@ -274,7 +274,7 @@ public class Task extends BaseRecord implements Parcelable, Defines {
         return this.status;
     }
 
-    protected Task(Parcel in) {
+    public Task(Parcel in) {
         setGuid(in.readString());
         creator_guid = in.readString();
         setTitle(in.readString());

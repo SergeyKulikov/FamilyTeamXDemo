@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.mycoloruniverse.familyteamx.model.Task;
+import com.mycoloruniverse.familyteamx.model.TaskItem;
 
 import java.util.List;
 
@@ -34,7 +35,10 @@ public interface FamilyTeamDao {
     Completable rx_saveTask(Task task);
 
     @Query("SELECT DISTINCT title FROM TaskItem ORDER BY title")
-    Flowable<List<String>> rx_loadGoodList();
+    Flowable<List<String>> rx_loadProductList();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Completable rx_SaveTaskItems(List<TaskItem> items);
 
 //    @Query("SELECT * FROM TaskItem WHERE receipt_id = :receipt_id")//
 //    Flowable<List<CartItem>> rx_loadCartItems(Long receipt_id);

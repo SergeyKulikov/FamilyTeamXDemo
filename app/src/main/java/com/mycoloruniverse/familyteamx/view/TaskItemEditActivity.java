@@ -1,8 +1,11 @@
 package com.mycoloruniverse.familyteamx.view;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -10,7 +13,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mycoloruniverse.familyteamx.Common;
@@ -23,7 +25,7 @@ import com.mycoloruniverse.familyteamx.presenter.TaskItemEditActivityPresenter;
 import java.util.Arrays;
 import java.util.List;
 
-public class TaskItemEditActivity extends AppCompatActivity implements Defines {
+public class TaskItemEditActivity extends AppCompatActivity implements ITaskItemEditActivityView, Defines {
     private final String TAG = TaskItemEditActivity.class.getSimpleName();
     private TaskItemEditActivityPresenter presenter;
 
@@ -34,23 +36,29 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
     private AutoCompleteTextView actvItemName;
     private EditText etItemValue;
     private EditText etItemSum;
-    private Spinner elvItemUnit;
+    private EditText etItemPrice;
+    private Spinner sprItemUnit;
     private RadioButton rbProcessItem, rbDoneItem, rbCanceledItem;
     //private ExpandableListView elvItemUnit;
     private Button btnOkItem, btnCancelItem;
-    // private List<Good> goodList;
-    private String[] goodList;
 
-
-    private int currentTaskType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         intentIn = getIntent();
-        currentTaskType = intentIn.getIntExtra(TASK_TYPE, TYPE_FREE_CONTENT);
-        currentTaskItem = intentIn.getParcelableExtra(TASK_ITEM_OBJECT);
+        int currentTaskType = intentIn.getIntExtra(TASK_TYPE, TYPE_FREE_CONTENT);
+        String currentTaskGuid = intentIn.getStringExtra(GUID);
+
+        if (currentTaskGuid.isEmpty()) {
+            Log.e(TAG, "Unknown task have been got.");
+            return;
+        }
+
+        presenter = new TaskItemEditActivityPresenter(this);
+        presenter.setTaskItem(intentIn.getParcelableExtra(TASK_ITEM_OBJECT));
         if (currentTaskItem == null) {
             currentTaskItem = new TaskItem();
         }
@@ -78,40 +86,50 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
             currentTaskItem = new TaskItem();
         }
 
-         */
+         *
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
 
-            /*
+
             actionBar.setSubtitle(
                     Calculation.getSubTitleByLayout(intent.getIntExtra("requestCode", 0),
                             getResources()).toUpperCase()
             );
-            */
+
         }
 
+
+         */
+
+
+    }
+
+    private void InitUI_market() {
+        // Единицы измерения
+        Spinner sprItemUnit = findViewById(R.id.sprItemUnit);
+        new SpinnerAction("Units",
+                getApplicationContext().getResources().getStringArray(R.array.units_goods),
+                sprItemUnit
+        );
 
         actvItemName = findViewById(R.id.actvItemName);
         actvItemName.setText(currentTaskItem.getContent());
 
 
-        goodList = presenter.getGoods(); // getPrivateGoodList();
-
-        ArrayAdapter goood_list_adapter = new ArrayAdapter(this,
+        String[] goodList = presenter.getGoods();
+        ArrayAdapter product_list_adapter = new ArrayAdapter(this,
                 android.R.layout.simple_list_item_1,
                 goodList
         );
 
-        goodList = presenter.getGoods();
-
-        actvItemName.setAdapter(goood_list_adapter);
+        actvItemName.setAdapter(product_list_adapter);
         actvItemName.setThreshold(1);
 
-        // это для варианта multy
-        //actvItemName.setAdapter(goood_list_adapter);
+        // это для варианта multi
+        //actvItemName.setAdapter(product_list_adapter);
         //actvItemName.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
         etItemValue = findViewById(R.id.etItemValue);
@@ -137,14 +155,15 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
             }
         });
 
-        rbDoneItem = findViewById(R.id.rbDoneItem);
-        rbCanceledItem = findViewById(R.id.rbCanceledItem);
-        rbProcessItem = findViewById(R.id.rbProcessItem);
+        rbDoneItem = findViewById(R.id.rbDoneTaskItem);
+        rbCanceledItem = findViewById(R.id.rbCancelledTaskItem);
+        rbProcessItem = findViewById(R.id.rbInProgressTaskItem);
 
         rbDoneItem.setChecked(currentTaskItem.isDone());
         rbCanceledItem.setChecked(currentTaskItem.isCanceled());
         rbProcessItem.setChecked(!currentTaskItem.isDone() && !currentTaskItem.isCanceled());
 
+        /*
         btnOkItem = findViewById(R.id.btnOkItem);
         btnOkItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,23 +199,24 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
                 finish();
             }
         });
+       */
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, getUnits()
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        elvItemUnit = findViewById(R.id.elvItemUnit);
-        elvItemUnit.setAdapter(adapter);
-        // загоspinnerловок
-        elvItemUnit.setPrompt("Title");
+        sprItemUnit = findViewById(R.id.sprItemUnit);
+        sprItemUnit.setAdapter(adapter);
+        sprItemUnit.setPrompt("Title");
         // выделяем элемент
 
-        elvItemUnit.setTextAlignment( View.TEXT_ALIGNMENT_TEXT_END );
+        sprItemUnit.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
 
-        elvItemUnit.setSelection( getUnitIndexByName(currentTaskItem.getUnit()) );
+        /*
+        sprItemUnit.setSelection( getUnitIndexByName(currentTaskItem.getUnit()) );
         // устанавливаем обработчик нажатия
-        elvItemUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        sprItemUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
@@ -208,19 +228,8 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
+        */
 
-
-
- */
-    }
-
-    private void InitUI_market() {
-        // Единицы измерения
-        Spinner sprItemUnit = findViewById(R.id.sprItemUnit);
-        new SpinnerAction("Units",
-                getApplicationContext().getResources().getStringArray(R.array.units_goods),
-                sprItemUnit
-        );
     }
 
     private String[] getUnits() {
@@ -252,4 +261,19 @@ public class TaskItemEditActivity extends AppCompatActivity implements Defines {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @SuppressLint("DefaultLocale")
+    @Override
+    public void updateView() {
+        actvItemName.setText(presenter.getName());
+        sprItemUnit.setSelection(
+                ((ArrayAdapter) sprItemUnit.getAdapter()).getPosition(presenter.getUnit())
+        );
+
+        etItemSum.setText(String.format("%.2f", presenter.getSum()));
+        etItemPrice.setText(String.format("%.2f", presenter.getPrice()));
+        etItemValue.setText(String.format("%f", presenter.getValue()));
+    }
+
+
 }

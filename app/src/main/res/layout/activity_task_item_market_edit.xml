@@ -162,7 +162,7 @@
 
 
     <RadioGroup
-        android:id="@+id/rgProgress"
+        android:id="@+id/rgProgressTaskItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/radio_group_style"
@@ -173,7 +173,7 @@
         android:padding="8dp">
 
         <RadioButton
-            android:id="@+id/rbInProgress"
+            android:id="@+id/rbInProgressTaskItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -182,7 +182,7 @@
             android:textColor="@color/title_color" />
 
         <RadioButton
-            android:id="@+id/rbDoneTask"
+            android:id="@+id/rbDoneTaskItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -191,7 +191,7 @@
             android:textColor="@color/title_color" />
 
         <RadioButton
-            android:id="@+id/rbCancelledTask"
+            android:id="@+id/rbCancelledTaskItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
