@@ -4,6 +4,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import java.util.List;
+
 /**
  * Created by Sergey on 05.03.2018.
  */
@@ -12,7 +14,7 @@ public class SpinnerAction {
     Spinner spinner;
     ArrayAdapter<String> adapter_type;
 
-    public SpinnerAction(String prompt, String[] items, Spinner spinnerView) {
+    public SpinnerAction(String prompt, List<String> items, Spinner spinnerView) {
 
         this.spinner = spinnerView;
         /*
@@ -24,6 +26,7 @@ public class SpinnerAction {
 
         // adapter_type.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         */
+
         adapter_type = new ArrayAdapter<String>(spinnerView.getContext(),
                 R.layout.spinner_item,
                 items

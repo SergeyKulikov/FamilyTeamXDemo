@@ -24,7 +24,7 @@ public class TaskEditActivityPresenter implements Defines {
     public TaskEditActivityPresenter(ITaskEditActivityView view, String taskGUID) {
         this.view = view;
 
-        if (taskGUID.isEmpty()) {
+        if (taskGUID == null) {
             this.task = new Task();
         } else {
             // саму задачу

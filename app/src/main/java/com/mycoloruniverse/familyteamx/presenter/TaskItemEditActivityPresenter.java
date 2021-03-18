@@ -50,7 +50,9 @@ public class TaskItemEditActivityPresenter {
     */
 
     public String[] getGoods() {
+
         final String[][] strarray = {new String[0]};
+
         dao.rx_loadProductList().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(items -> {
@@ -58,6 +60,7 @@ public class TaskItemEditActivityPresenter {
                 }, throwable -> {
                     Log.e(TAG, throwable.getLocalizedMessage());
                 }).dispose();
+
         return strarray[0];
     }
 

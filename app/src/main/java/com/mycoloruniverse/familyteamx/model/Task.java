@@ -60,6 +60,7 @@ public class Task extends BaseRecord implements Parcelable, Defines {
     @Ignore
     private final List<TaskItem> items; // Позиции задачи
 
+    @Ignore
     public Task(String creator_guid, String title, int type) {
         this.creator_guid = com.mycoloruniverse.familyteamx.Preferences.getUserGuid();
         this.setTitle(title);

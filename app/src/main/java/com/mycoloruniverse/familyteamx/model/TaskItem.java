@@ -30,13 +30,19 @@ public class TaskItem extends BaseRecord implements Parcelable {
     private String close_maker_guid;
     private int utilities_ident;
     private int status;
-    private double[] startUtilValue;
-    private double[] finishUtilValue;
-    private double[] valueUtil;
-    private double[] priceUtil;
-    private double[] sumUtil;
     private String location;
     private String weather;
+
+    @Ignore
+    private double[] startUtilValue;
+    @Ignore
+    private double[] finishUtilValue;
+    @Ignore
+    private double[] valueUtil;
+    @Ignore
+    private double[] priceUtil;
+    @Ignore
+    private double[] sumUtil;
 
     public static final Creator<TaskItem> CREATOR = new Creator<TaskItem>() {
         @Override
@@ -79,6 +85,7 @@ public class TaskItem extends BaseRecord implements Parcelable {
         this.utilities_ident = 0;
     }
 
+    @Ignore
     public TaskItem(String guid) {
         this.setTask_guid(guid);
         this.setTitle("");

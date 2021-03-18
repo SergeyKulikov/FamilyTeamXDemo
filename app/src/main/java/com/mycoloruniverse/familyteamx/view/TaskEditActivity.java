@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -29,6 +30,8 @@ import com.mycoloruniverse.familyteamx.R;
 import com.mycoloruniverse.familyteamx.SpinnerAction;
 import com.mycoloruniverse.familyteamx.model.TaskItem;
 import com.mycoloruniverse.familyteamx.presenter.TaskEditActivityPresenter;
+
+import java.util.Arrays;
 
 public class TaskEditActivity extends AppCompatActivity implements ITaskEditActivityView, Defines {
     private final String TAG = TaskEditActivity.class.getSimpleName();
@@ -195,28 +198,30 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         // Тип задачи
         sprTaskType = findViewById(R.id.sprTaskType);
         new SpinnerAction("Select your task type",
-                new String[]{
+                Arrays.asList(
                         getString(R.string.free_content),
                         getString(R.string.market),
-                        getString(R.string.utilities)},
+                        getString(R.string.utilities)
+                ),
                 sprTaskType
         );
 
 
-        /*
+
         sprTaskType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
+
+                presenter.setType(getType());
                 // показываем позиция нажатого элемента
-                Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
             }
         });
-         */
 
 
         etTaskSum = findViewById(R.id.etTaskSum);

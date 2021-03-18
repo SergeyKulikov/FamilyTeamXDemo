@@ -22,7 +22,6 @@ import com.mycoloruniverse.familyteamx.model.TaskItem;
 import com.mycoloruniverse.familyteamx.presenter.TaskItemEditActivityPresenter;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class TaskItemEditActivity extends AppCompatActivity implements ITaskItemEditActivityView, Defines {
     private final String TAG = TaskItemEditActivity.class.getSimpleName();
@@ -98,10 +97,14 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
     }
 
     private void InitUI_market() {
+        etItemSum = findViewById(R.id.etItemSum);
+        etItemValue = findViewById(R.id.etItemValue);
+        etItemPrice = findViewById(R.id.etItemPrice);
+
         // Единицы измерения
-        Spinner sprItemUnit = findViewById(R.id.sprItemUnit);
+        sprItemUnit = findViewById(R.id.sprItemUnit);
         new SpinnerAction("Units",
-                getApplicationContext().getResources().getStringArray(R.array.units_goods),
+                Arrays.asList(getApplicationContext().getResources().getStringArray(R.array.units_goods)),
                 sprItemUnit
         );
 
@@ -180,12 +183,13 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
         });
        */
 
+        /*
+        sprItemUnit = findViewById(R.id.sprItemUnit);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, getUnits()
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        sprItemUnit = findViewById(R.id.sprItemUnit);
         sprItemUnit.setAdapter(adapter);
         sprItemUnit.setPrompt("Title");
         // выделяем элемент
@@ -211,23 +215,6 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
 
     }
 
-    private String[] getUnits() {
-        return getApplicationContext().getResources().getStringArray(R.array.units_goods);
-    }
-
-    private int getUnitIndexByName(String name) {
-        List<String> myResArrayList = Arrays.asList(getUnits());
-        int index = -1;
-
-        for (int i = 0; i < myResArrayList.size(); i++) {
-            if (myResArrayList.get(i).equals(name)) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
