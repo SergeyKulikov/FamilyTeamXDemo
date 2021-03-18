@@ -1,8 +1,8 @@
 package com.mycoloruniverse.familyteamx.view;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.mycoloruniverse.familyteamx.Common;
@@ -28,8 +29,6 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
     private TaskItemEditActivityPresenter presenter;
 
     private final Common common = new Common();
-    private Intent intentIn;
-    private TaskItem currentTaskItem;
     // private MultiAutoCompleteTextView actvItemName;
     private AutoCompleteTextView actvItemName;
     private EditText etItemValue;
@@ -45,15 +44,10 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // presenter = TaskItemEditActivityPresenter.getInstance(this);
+        // создаем презентер
         presenter = new TaskItemEditActivityPresenter(this,
-                getIntent().getStringExtra(TASK_GUID),
                 getIntent().getStringExtra(TASK_ITEM_GUID)
         );
-
-        if (currentTaskItem == null) {
-            currentTaskItem = new TaskItem();
-        }
 
         switch (getIntent().getIntExtra(TASK_TYPE, TYPE_FREE_CONTENT)) {
             case TYPE_FREE_CONTENT:
@@ -79,7 +73,8 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
             currentTaskItem = new TaskItem();
         }
 
-         *
+
+        */
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -87,13 +82,12 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
             actionBar.setDisplayShowHomeEnabled(true);
 
 
-            actionBar.setSubtitle(
-                    Calculation.getSubTitleByLayout(intent.getIntExtra("requestCode", 0),
-                            getResources()).toUpperCase()
-            );
+            //actionBar.setSubtitle(
+            //        Calculation.getSubTitleByLayout(intent.getIntExtra("requestCode", 0),
+            //                getResources()).toUpperCase()
+            //);
 
         }
-        */
     }
 
     private void InitUI_market() {
@@ -114,13 +108,15 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
                 android.R.layout.simple_list_item_1,
                 goodList
         );
-        actvItemName.setText(currentTaskItem.getContent());
+
+        TaskItem taskItem = new TaskItem();
+        actvItemName.setText(presenter.getName());
         actvItemName.setAdapter(product_list_adapter);
         actvItemName.setThreshold(1);
 
 
         etItemValue = findViewById(R.id.etItemValue);
-        etItemValue.setText(Common.DoubleToStr(currentTaskItem.getValue(), 3));
+        etItemValue.setText(Common.DoubleToStr(presenter.getValue(), 3));
         etItemValue.setSelectAllOnFocus(true);
         etItemValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
@@ -132,7 +128,7 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
 
 
         etItemSum = findViewById(R.id.etItemSum);
-        etItemSum.setText(Common.DoubleToStr(currentTaskItem.getSum(), 2));
+        etItemSum.setText(Common.DoubleToStr(presenter.getSum(), 2));
         etItemSum.setSelectAllOnFocus(true);
         etItemSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
@@ -146,9 +142,9 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
         rbCanceledItem = findViewById(R.id.rbCancelledTaskItem);
         rbProcessItem = findViewById(R.id.rbInProgressTaskItem);
 
-        rbDoneItem.setChecked(currentTaskItem.isDone());
-        rbCanceledItem.setChecked(currentTaskItem.isCanceled());
-        rbProcessItem.setChecked(!currentTaskItem.isDone() && !currentTaskItem.isCanceled());
+        rbDoneItem.setChecked(presenter.isDone());
+        rbCanceledItem.setChecked(presenter.isCanceled());
+        rbProcessItem.setChecked(!presenter.isDone() && !presenter.isCanceled());
 
         /*
         btnOkItem = findViewById(R.id.btnOkItem);
@@ -217,10 +213,23 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
 
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.task_item_edit_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                // setResult(RESULT_OK, prepateTaskIntent() );
+            case R.id.menu_taskItemCommit:
+                // Пишем изменения в базу
+                // TODO: для сетевой работы придется вынести в отдельный класс
+
+                presenter.saveTaskItem();
+
+                //Intent intent = new Intent();
+                //intent.putExtra(TASK_ITEM_GUID, presenter.getTaskItemGUID());
+                //setResult(RESULT_OK, intent );
                 onBackPressed();
                 break;
         }
@@ -242,4 +251,9 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
     }
 
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        presenter.disposeConnection();
+    }
 }

@@ -12,6 +12,7 @@ import com.mycoloruniverse.familyteamx.model.TaskItem;
 import com.mycoloruniverse.familyteamx.view.ITaskEditActivityView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class TaskEditActivityPresenter implements Defines {
@@ -20,34 +21,40 @@ public class TaskEditActivityPresenter implements Defines {
 
     private final ITaskEditActivityView view;
     private Task task;
+    private Disposable disposableTask, disposableTaskItems;
 
     public TaskEditActivityPresenter(ITaskEditActivityView view, String taskGUID) {
         this.view = view;
 
         if (taskGUID == null) {
-            this.task = new Task();
+            Log.e(TAG, "GUID задачи не получен");
         } else {
-            // саму задачу
-            dao.rx_loadTask(taskGUID)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(item -> {
-                        task = item;
-
-                        // детальки задачи
-                        dao.rx_loadTaskItems(taskGUID).subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(items -> {
-                                    task.setItems(items);
-                                }, throwable -> {
-                                    Log.e(TAG, throwable.getLocalizedMessage());
-                                }).dispose();
-                        // todo: Нужно еще команду подгрузить
-
-                    }, throwable -> {
-                        Log.e(TAG, throwable.getLocalizedMessage());
-                    }).dispose();
+            // читаем задачу из локальной базы вместе со всеми детальнаями
+            // таже подписываемся на изменения
+            loadTask(taskGUID);
         }
+    }
+
+    private void loadTask(String taskGUID) {
+        disposableTask = dao.rx_loadTask(taskGUID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(item -> {
+                    task = item;
+
+                    // детальки задачи
+                    disposableTaskItems = dao.rx_loadTaskItems(taskGUID).subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(items -> {
+                                task.setItems(items);
+                            }, throwable -> {
+                                Log.e(TAG, throwable.getLocalizedMessage());
+                            });
+                    // todo: Нужно еще команду подгрузить
+
+                }, throwable -> {
+                    Log.e(TAG, throwable.getLocalizedMessage());
+                });
     }
 
     public String getTitle() {
@@ -72,10 +79,11 @@ public class TaskEditActivityPresenter implements Defines {
         return task.getItems().size();
     }
 
-    public TaskItem addTaskItem() {
-        TaskItem item = new TaskItem();
-        task.getItems().add(item);
-        return item;
+    public String addTaskItem() {
+        TaskItem taskItem = new TaskItem(task.getGuid());
+        this.task.getItems().add(taskItem);
+
+        return taskItem.getGuid();
     }
 
     public double getSum() {
@@ -118,6 +126,11 @@ public class TaskEditActivityPresenter implements Defines {
             this.task = task;
         }
         view.updateView();
+    }
+
+    public void disposeBaseConnection() {
+        disposableTaskItems.dispose();
+        disposableTask.dispose();
     }
 
 }

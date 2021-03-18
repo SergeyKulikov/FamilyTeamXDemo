@@ -44,6 +44,9 @@ public interface FamilyTeamDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable rx_SaveTaskItems(List<TaskItem> items);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    Maybe<Long> rx_SaveTaskItem(TaskItem items);
+
     @Query("SELECT * FROM TaskItem WHERE task_guid = :task_guid")
     Maybe<List<TaskItem>> rx_loadTaskItems(String task_guid);
 

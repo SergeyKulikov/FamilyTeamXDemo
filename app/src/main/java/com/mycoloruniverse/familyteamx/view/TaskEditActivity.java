@@ -28,7 +28,6 @@ import com.mycoloruniverse.familyteamx.Common;
 import com.mycoloruniverse.familyteamx.Defines;
 import com.mycoloruniverse.familyteamx.R;
 import com.mycoloruniverse.familyteamx.SpinnerAction;
-import com.mycoloruniverse.familyteamx.model.TaskItem;
 import com.mycoloruniverse.familyteamx.presenter.TaskEditActivityPresenter;
 
 import java.util.Arrays;
@@ -57,6 +56,8 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         setContentView(R.layout.activity_property_task);
 
         // setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        // получили на вход GUID задачи и читаем ее в TaskEditActivityPresenter из локальной базы
         presenter = new TaskEditActivityPresenter(this, getIntent().getStringExtra(TASK_GUID));
 
         ActionBar actionBar = getSupportActionBar();
@@ -150,20 +151,20 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         rbDone = findViewById(R.id.rbDoneTask);
         rbCancelled = findViewById(R.id.rbDoneTask);
 
+
         fabAddTaskDetailItem = findViewById(R.id.fabAddTaskItem);
         fabAddTaskDetailItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // сразу запускаем редактирование детальки
-                Intent taskItemActivity = new Intent(getApplicationContext(),
+                Intent taskEditItemActivity = new Intent(getApplicationContext(),
                         TaskItemEditActivity.class
                 );
-                taskItemActivity.putExtra(TASK_GUID, presenter.getTaskGuid()); // guid задачи
-                taskItemActivity.putExtra(TASK_ITEM_GUID, (String) null); // guid детальки = null
-                taskItemActivity.putExtra(TASK_TYPE, presenter.getType()); // guid детальки = null
-                startActivityForResult(taskItemActivity, IDD_TASK_ITEM_ADD);
+                taskEditItemActivity.putExtra(TASK_GUID, presenter.getTaskGuid()); // guid задачи
+                taskEditItemActivity.putExtra(TASK_ITEM_GUID, presenter.addTaskItem()); // guid детальки
+                taskEditItemActivity.putExtra(TASK_TYPE, presenter.getType()); // guid детальки = null
 
-                // refreshDetails();
+                //startActivityForResult(taskItemActivity, IDD_TASK_ITEM_ADD);
+                startActivity(taskEditItemActivity);
             }
         });
 
@@ -205,7 +206,6 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
                 ),
                 sprTaskType
         );
-
 
 
         sprTaskType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -257,6 +257,7 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         taskItemsRecycleView.setLayoutManager(new LinearLayoutManager(this));
         taskItemsRecycleView.setAdapter(taskItemAdapter);
 
+        //
 
     }
 
@@ -289,7 +290,8 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
                 if (data.getExtras() != null) {
                     contentValues.clear();
 
-                    TaskItem currentTaskItem = (TaskItem) data.getSerializableExtra("classTaskItem");
+
+                    // presenter.loadTask();
 
                     // Log.d( FTEAM_LOG, "Got new item title: " + currentTaskItem.getContent() );
 
@@ -323,7 +325,8 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
     @Override
     protected void onPause() {
         super.onPause();
-        // setResult(RESULT_OK, prepateTaskIntent());
+        // отписались от загрузки данных по задаче
+        presenter.disposeBaseConnection();
     }
 
     /*
@@ -438,5 +441,5 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
     public String getTaskTitle() {
         return etTaskTitle.getText().toString();
     }
-
 }
+

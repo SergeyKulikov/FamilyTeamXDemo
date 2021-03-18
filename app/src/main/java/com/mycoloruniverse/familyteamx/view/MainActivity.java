@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -19,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mycoloruniverse.familyteamx.R;
-import com.mycoloruniverse.familyteamx.model.Task;
 import com.mycoloruniverse.familyteamx.presenter.MainActivityPresenter;
 
 import io.reactivex.Observable;
@@ -28,9 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.mycoloruniverse.familyteamx.Defines.IDD_TASK_ADD;
 import static com.mycoloruniverse.familyteamx.Defines.TASK_GUID;
-import static com.mycoloruniverse.familyteamx.Defines.TASK_OBJECT;
 
 /**
  * 1. Проект расчитан на создание команды, которая выполняет какие-то действия и отмечает что сделано
@@ -69,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        taskAdapter = new TaskAdapter(getContext());
-
+        taskAdapter = new TaskAdapter(getContext()); // список задач в адаптере
+        // TODO: Сделать выбор зачачи из RecycleView
         initUI();
 
         presenter = new MainActivityPresenter(this);
@@ -92,12 +88,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), TaskEditActivity.class);
-                //intent.putExtra(TASK_OBJECT, (Task)null); // передаем пустой объект
+                // создали новую задау и передаем GUID задачи
+                intent.putExtra(TASK_GUID, presenter.addTask());
 
-                // Передадим не объект, а guid. Будет быстрее, тем более он пустой
-                intent.putExtra(TASK_GUID, (String) null); // передаем пустой объект
-
-                startActivityForResult(intent, IDD_TASK_ADD);
+                startActivity(intent);
+                // startActivityForResult(intent, IDD_TASK_ADD);
             }
         });
 
@@ -220,6 +215,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
             return;
         }
 
+        //запись делаем там
+
+        // presenter.addTask(task);
+
+        /*
         switch (requestCode) {
             case IDD_TASK_ADD:
                 if (data == null) {
@@ -232,6 +232,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
             default:
                 Log.e(TAG, "Unexpected result on request code: IDD_TASK_ADD");
         }
+
+         */
     }
 
     @Override

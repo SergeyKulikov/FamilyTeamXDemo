@@ -8,6 +8,7 @@ import com.mycoloruniverse.familyteamx.model.TaskItem;
 import com.mycoloruniverse.familyteamx.view.ITaskItemEditActivityView;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class TaskItemEditActivityPresenter {
@@ -18,25 +19,32 @@ public class TaskItemEditActivityPresenter {
     // private static TaskItemEditActivityPresenter instance;
     private final ITaskItemEditActivityView view;
 
+    private boolean isSavedItems;
+
     private TaskItem taskItem;
     private String task_guid;
+    private Disposable disposableLoadTaskItem, disposableSaveTaskItem;
 
-    public TaskItemEditActivityPresenter(ITaskItemEditActivityView view, String taskGUID,
+    public TaskItemEditActivityPresenter(ITaskItemEditActivityView view,
                                          String taskItemGUID) {
         if (taskItemGUID == null) { //
-            this.task_guid = taskGUID;
-            this.taskItem = new TaskItem(this.task_guid); // новая деталь сразу привязываем к родителю
+            Log.e(TAG, "Не получен GUID детали задачи");
         } else {
-            dao.rx_loadTaskItem(taskItemGUID)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(item -> {
-                        taskItem = item;
-                    }, throwable -> {
-                        Log.e(TAG, throwable.getLocalizedMessage());
-                    }).dispose();
+            loadTaskItem(taskItemGUID);
         }
         this.view = view;
+        this.isSavedItems = false;
+    }
+
+    private void loadTaskItem(String taskItemGUID) {
+        disposableLoadTaskItem = dao.rx_loadTaskItem(taskItemGUID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(item -> {
+                    taskItem = item;
+                }, throwable -> {
+                    Log.e(TAG, throwable.getLocalizedMessage());
+                });
     }
 
     /*
@@ -63,7 +71,6 @@ public class TaskItemEditActivityPresenter {
 
         return strarray[0];
     }
-
 
     public String getName() {
         return this.taskItem.getTitle();
@@ -94,4 +101,31 @@ public class TaskItemEditActivityPresenter {
         this.view.updateView();
     }
 
+    public void saveTaskItem() {
+        view.updateView();
+        disposableSaveTaskItem = dao.rx_SaveTaskItem(taskItem)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(id -> {
+                            isSavedItems = true;
+                        }
+                );
+    }
+
+    public String getTaskItemGUID() {
+        return this.taskItem.getGuid();
+    }
+
+    public void disposeConnection() {
+        disposableLoadTaskItem.dispose();
+        disposableSaveTaskItem.dispose();
+    }
+
+    public boolean isDone() {
+        return this.taskItem.isDone();
+    }
+
+    public boolean isCanceled() {
+        return this.taskItem.isCanceled();
+    }
 }

@@ -32,7 +32,7 @@ public class MainActivityPresenter implements Defines {
     private final MainActivityView view;
     private final Map<Integer, Integer> statusMap = new HashMap<>();
 
-    private final Task task;
+    private Task task;
     private Disposable loadRX;
 
     public MainActivityPresenter(MainActivityView view) {
@@ -84,7 +84,8 @@ public class MainActivityPresenter implements Defines {
     }
 
 
-    public void addTask(Task task) {
+    public String addTask() {
+        task = new Task();
         // добавляем новую запись
         dao.rx_saveTask(task)
                 .subscribeOn(Schedulers.io())
@@ -105,6 +106,7 @@ public class MainActivityPresenter implements Defines {
 
                     }
                 });
+        return task.getGuid();
     }
 
 
