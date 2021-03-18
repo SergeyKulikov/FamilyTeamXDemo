@@ -76,7 +76,7 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
         initUI();
 
         createTabs();
-        updateView();
+        // updateView();
 
 
         // выделяем элемент

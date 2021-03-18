@@ -19,7 +19,6 @@ import com.mycoloruniverse.familyteamx.Common;
 import com.mycoloruniverse.familyteamx.Defines;
 import com.mycoloruniverse.familyteamx.R;
 import com.mycoloruniverse.familyteamx.SpinnerAction;
-import com.mycoloruniverse.familyteamx.model.TaskItem;
 import com.mycoloruniverse.familyteamx.presenter.TaskItemEditActivityPresenter;
 
 import java.util.Arrays;
@@ -62,7 +61,7 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
         }
 
         InitUI_market();
-        updateView();
+        // updateView();
 
 
         /*
@@ -109,14 +108,11 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
                 goodList
         );
 
-        TaskItem taskItem = new TaskItem();
-        actvItemName.setText(presenter.getName());
         actvItemName.setAdapter(product_list_adapter);
         actvItemName.setThreshold(1);
 
 
         etItemValue = findViewById(R.id.etItemValue);
-        etItemValue.setText(Common.DoubleToStr(presenter.getValue(), 3));
         etItemValue.setSelectAllOnFocus(true);
         etItemValue.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
@@ -128,7 +124,6 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
 
 
         etItemSum = findViewById(R.id.etItemSum);
-        etItemSum.setText(Common.DoubleToStr(presenter.getSum(), 2));
         etItemSum.setSelectAllOnFocus(true);
         etItemSum.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
@@ -142,9 +137,6 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
         rbCanceledItem = findViewById(R.id.rbCancelledTaskItem);
         rbProcessItem = findViewById(R.id.rbInProgressTaskItem);
 
-        rbDoneItem.setChecked(presenter.isDone());
-        rbCanceledItem.setChecked(presenter.isCanceled());
-        rbProcessItem.setChecked(!presenter.isDone() && !presenter.isCanceled());
 
         /*
         btnOkItem = findViewById(R.id.btnOkItem);
@@ -232,6 +224,7 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
                 //setResult(RESULT_OK, intent );
                 onBackPressed();
                 break;
+            default:
         }
 
         return super.onOptionsItemSelected(item);
@@ -248,6 +241,10 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
         etItemSum.setText(String.format("%.2f", presenter.getSum()));
         etItemPrice.setText(String.format("%.2f", presenter.getPrice()));
         etItemValue.setText(String.format("%f", presenter.getValue()));
+        actvItemName.setText(presenter.getName());
+        rbDoneItem.setChecked(presenter.isDone());
+        rbCanceledItem.setChecked(presenter.isCanceled());
+        rbProcessItem.setChecked(!presenter.isDone() && !presenter.isCanceled());
     }
 
 

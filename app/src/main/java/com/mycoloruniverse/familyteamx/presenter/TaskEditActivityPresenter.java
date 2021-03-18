@@ -47,6 +47,7 @@ public class TaskEditActivityPresenter implements Defines {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(items -> {
                                 task.setItems(items);
+                                view.updateView();
                             }, throwable -> {
                                 Log.e(TAG, throwable.getLocalizedMessage());
                             });

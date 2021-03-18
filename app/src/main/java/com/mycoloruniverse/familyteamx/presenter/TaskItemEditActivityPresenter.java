@@ -42,6 +42,7 @@ public class TaskItemEditActivityPresenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(item -> {
                     taskItem = item;
+                    view.updateView();
                 }, throwable -> {
                     Log.e(TAG, throwable.getLocalizedMessage());
                 });
@@ -102,12 +103,13 @@ public class TaskItemEditActivityPresenter {
     }
 
     public void saveTaskItem() {
-        view.updateView();
+
         disposableSaveTaskItem = dao.rx_SaveTaskItem(taskItem)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(id -> {
-                            isSavedItems = true;
+                    isSavedItems = true;
+                    view.updateView();
                         }
                 );
     }

@@ -103,7 +103,7 @@ public class MainActivityPresenter implements Defines {
 
                     @Override
                     public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-
+                        Log.e(TAG, e.getLocalizedMessage());
                     }
                 });
         return task.getGuid();
