@@ -34,6 +34,10 @@ import java.util.List;
 
 public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskItemViewHolder>
         implements Defines {
+
+    private static IClickListener clickListener;
+    private final String TAG = TaskItemAdapter.class.getSimpleName();
+
     private final List<TaskItem> taskItemList;
     private final int lastPosition = -1;
     private final Context context;
@@ -78,6 +82,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
 
         this.taskGuid = currentTask.getGuid();
         this.currentTaskType = currentTask.getType();
+        this.notifyDataSetChanged();
     }
 
     public void setDivideSum(boolean isDivideSum) {
@@ -244,6 +249,18 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         return taskItemList.size();
     }
 
+    public void setOnItemClickListener(IClickListener clickListener) {
+        TaskItemAdapter.clickListener = clickListener;
+    }
+
+    /*
+    public interface ClickListener {
+        void onItemClick(int position, View v);
+
+        void onItemLongClick(int position, View v);
+    }
+
+     */
 
     static class TaskItemViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener, Defines, View.OnCreateContextMenuListener {
@@ -312,7 +329,6 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
          *
          * http://frogermcs.github.io/instamaterial-recyclerview-animations-done-right/
          */
-
 
     }
 

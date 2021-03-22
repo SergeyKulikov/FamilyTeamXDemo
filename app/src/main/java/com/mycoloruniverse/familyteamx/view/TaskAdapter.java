@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> implements Defines {
     private final String TAG = TaskAdapter.class.getSimpleName();
-    private static ClickListener clickListener;
+    private static IClickListener clickListener;
 
     private final List<Task> taskList;
     private final Map<String, TaskAttr> mapAttr;
@@ -221,15 +221,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return taskList.get(getCurrentPosition());
     }
 
-    public void setOnItemClickListener(ClickListener clickListener) {
+    public void setOnItemClickListener(IClickListener clickListener) {
         TaskAdapter.clickListener = clickListener;
     }
 
+    /*
     public interface ClickListener {
         void onItemClick(int position, View v);
 
         void onItemLongClick(int position, View v);
     }
+
+     */
 
     static class TaskViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener, View.OnLongClickListener, View.OnCreateContextMenuListener {

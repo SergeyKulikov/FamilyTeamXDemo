@@ -12,6 +12,7 @@ import com.mycoloruniverse.familyteamx.FamilyTeamApp;
 import com.mycoloruniverse.familyteamx.FamilyTeamDao;
 import com.mycoloruniverse.familyteamx.model.Task;
 import com.mycoloruniverse.familyteamx.model.TaskAttr;
+import com.mycoloruniverse.familyteamx.view.IClickListener;
 import com.mycoloruniverse.familyteamx.view.TaskAdapter;
 import com.mycoloruniverse.familyteamx.view.TaskEditActivity;
 
@@ -154,12 +155,12 @@ public class MainActivityPresenter implements Defines {
     }
 
     private void setAdapterClick() {
-        view.getTaskAdapter().setOnItemClickListener(new TaskAdapter.ClickListener() {
+        view.getTaskAdapter().setOnItemClickListener(new IClickListener() {
             @Override
             public void onItemClick(int position, View v) {
                 Log.d(TAG, "onItemClick position: " + position);
                 // запускаем редактирование записи
-                intent.putExtra(TASK_GUID, view.getTaskAdapter().getTaskList().get(position));
+                intent.putExtra(TASK_GUID, view.getTaskAdapter().getTaskList().get(position).getGuid());
                 (v.getContext()).startActivity(intent);
 
             }

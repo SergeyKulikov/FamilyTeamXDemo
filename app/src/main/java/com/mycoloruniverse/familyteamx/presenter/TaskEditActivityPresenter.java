@@ -1,6 +1,7 @@
 package com.mycoloruniverse.familyteamx.presenter;
 
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -9,6 +10,7 @@ import com.mycoloruniverse.familyteamx.FamilyTeamApp;
 import com.mycoloruniverse.familyteamx.FamilyTeamDao;
 import com.mycoloruniverse.familyteamx.model.Task;
 import com.mycoloruniverse.familyteamx.model.TaskItem;
+import com.mycoloruniverse.familyteamx.view.IClickListener;
 import com.mycoloruniverse.familyteamx.view.ITaskEditActivityView;
 
 import io.reactivex.MaybeObserver;
@@ -42,22 +44,46 @@ public class TaskEditActivityPresenter implements Defines {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(item -> {
                     task = item;
-
-                    // детальки задачи
-                    disposableTaskItems = dao.rx_loadTaskItems(taskGUID.trim())
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(items -> {
-                                task.setItems(items);
-                                view.updateView();
-                            }, throwable -> {
-                                Log.e(TAG, throwable.getLocalizedMessage());
-                            });
-                    // todo: Нужно еще команду подгрузить
-
+                    // view.getTaskItemAdapter().setData(task);
                 }, throwable -> {
                     Log.e(TAG, throwable.getLocalizedMessage());
                 });
+
+        LoadTaskItems(taskGUID);
+
+    }
+
+    private void setAdapterClick() {
+        view.getTaskItemAdapter().setOnItemClickListener(new IClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                Log.d(TAG, "onItemClick position: " + position);
+                // запускаем редактирование записи
+                // intent.putExtra(TASK_GUID, view.getTaskItemAdapter().getTaskItemsList().get(position).getGuid());
+                // (v.getContext()).startActivity(intent);
+
+            }
+
+            @Override
+            public void onItemLongClick(int position, View v) {
+                Log.d(TAG, "onItemLongClick pos = " + position);
+            }
+        });
+    }
+
+    private void LoadTaskItems(String taskGUID) {
+        // детальки задачи
+        disposableTaskItems = dao.rx_loadTaskItems(taskGUID.trim())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(items -> {
+                    task.setItems(items);
+                    view.updateView();
+                    view.getTaskItemAdapter().setData(task);
+                }, throwable -> {
+                    Log.e(TAG, throwable.getLocalizedMessage());
+                });
+        // todo: Нужно еще команду подгрузить
     }
 
     public String getTitle() {
