@@ -213,6 +213,8 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
 
+
+                // TODO: Пишет не тот тип. Обработать ошибку здесь и исправить в момент записи.
                 presenter.setType(getType());
                 // показываем позиция нажатого элемента
                 // Toast.makeText(getBaseContext(), "Position = " + position, Toast.LENGTH_SHORT).show();

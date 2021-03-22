@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.mycoloruniverse.familyteamx.model.Task;
+import com.mycoloruniverse.familyteamx.model.TaskAttr;
 import com.mycoloruniverse.familyteamx.model.TaskItem;
 
 import java.util.List;
@@ -55,6 +56,21 @@ public interface FamilyTeamDao {
 
     @Query("SELECT * FROM TaskItem WHERE task_guid = :task_guid")
     Maybe<List<TaskItem>> rx_loadTaskItems(String task_guid);
+
+    @Query("SELECT * FROM TaskItem")
+    Maybe<List<TaskItem>> rx_loadAllTaskItems();
+
+    @Query("SELECT ti.task_guid, " +
+            "sum(COALESCE(ti.sum, 0)) as sum, " +
+            "sum(COALESCE(ti.done, 0)) as done_items, " +
+            "sum(ti.canceled) as cancelled_items, " +
+            "count(*) as detail_count " +
+            "FROM Task t " +
+            "INNER JOIN TAskItem ti ON (ti.task_guid = t.guid) " +
+            "WHERE t.status = :status " +
+            "GROUP BY task_guid")
+    Maybe<List<TaskAttr>> rx_1loadAllTaskItems(int status);
+
 
     @Query("SELECT * FROM TaskItem WHERE guid = :taskItem_guid")
     Single<TaskItem> rx_loadTaskItem(String taskItem_guid);

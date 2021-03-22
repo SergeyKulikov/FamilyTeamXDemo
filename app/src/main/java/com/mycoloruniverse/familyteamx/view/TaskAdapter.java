@@ -18,9 +18,12 @@ import com.mycoloruniverse.familyteamx.Common;
 import com.mycoloruniverse.familyteamx.Defines;
 import com.mycoloruniverse.familyteamx.R;
 import com.mycoloruniverse.familyteamx.model.Task;
+import com.mycoloruniverse.familyteamx.model.TaskAttr;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // import com.daimajia.androidanimations.library.Techniques;
 // import com.daimajia.androidanimations.library.YoYo;
@@ -32,14 +35,17 @@ import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> implements Defines {
     private final String TAG = TaskAdapter.class.getSimpleName();
+    private static ClickListener clickListener;
 
     private final List<Task> taskList;
+    private final Map<String, TaskAttr> mapAttr;
     private final int currentPosition = -1;
     private final Context context;
 
     public TaskAdapter(Context context) {
         this.context = context;
         this.taskList = new ArrayList<>();
+        this.mapAttr = new HashMap<>();
         this.taskList.clear();
     }
 
@@ -57,6 +63,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         this.notifyDataSetChanged();
     }
 
+    public void setTaskAttr(Map<String, TaskAttr> mapAttr) {
+        this.mapAttr.clear();
+        this.mapAttr.putAll(mapAttr);
+        this.notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public TaskAdapter.TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -70,6 +82,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void onBindViewHolder(final TaskAdapter.TaskViewHolder holder, int position) {
 
         // holder.tvDebugTask.setText(taskList.get(position).updateDone + " | " + taskList.get(position).getId() + " | " + taskList.get(position).getGuid());
+
+        String taskKey = taskList.get(position).getGuid();
+        // TODO: Может и не стоит создавать объект. Подумать.
+        if (!mapAttr.containsKey(taskKey)) {
+            mapAttr.put(taskKey, new TaskAttr());
+        }
 
         switch (taskList.get(position).getType()) {
             case TYPE_FREE_CONTENT:
@@ -127,10 +145,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         // holder.contentView.setText( String.valueOf( taskList.get( position ).getCreated_time() ) );
         holder.contentView.setText(
                 String.format("Spent sum: (%s), Items: %s, Done: %s",
-                        Common.DoubleToStr(taskList.get(position).getVirtualSum(), 2),
-                        //Common.DoubleToStr(taskList.get(position).getActiveItemsCount(), 0),
-                        Common.DoubleToStr(taskList.get(position).getVirtualDetail_count(), 0),
-                        Common.DoubleToStr(taskList.get(position).getItemsDone(), 0)
+                        Common.DoubleToStr(mapAttr.get(taskKey).getSum(), 2),
+                        Common.DoubleToStr(mapAttr.get(taskKey).getDetail_count(), 0),
+                        Common.DoubleToStr(mapAttr.get(taskKey).getDone_items(), 0)
                 )
         );
 
@@ -204,9 +221,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         return taskList.get(getCurrentPosition());
     }
 
+    public void setOnItemClickListener(ClickListener clickListener) {
+        TaskAdapter.clickListener = clickListener;
+    }
+
+    public interface ClickListener {
+        void onItemClick(int position, View v);
+
+        void onItemLongClick(int position, View v);
+    }
+
     static class TaskViewHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener, View.OnCreateContextMenuListener {
+            implements View.OnClickListener, View.OnLongClickListener, View.OnCreateContextMenuListener {
         protected Context context;
+
         /**
          * Держит единственную запись из task_list_item_layout.xml
          */
@@ -233,21 +261,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             //tvDebugTask = (TextView) itemView.findViewById(R.id.tvDebugTask);
 
             context = itemView.getContext();
-            // itemView.setOnClickListener(this);
+
+            itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            // отсюда неудобно доставать структкру Task
+            clickListener.onItemClick(getAdapterPosition(), v);
+        }
 
-            int itemPosition = getAdapterPosition();
-            //Log.d(FTEAM_LOG, "TaskViewHolder.onClick(): " + itemPosition);
-            //Intent taskActivity = new Intent( v.getContext(), TaskEditActivity.class);
-
-            // v.getContext()
-            //taskActivity.putExtra( "_id",  )
-
-            // ((Activity)v.getContext()).startActivityForResult(taskActivity, IDD_TASK_EDIT );
+        @Override
+        public boolean onLongClick(View v) {
+            clickListener.onItemLongClick(getAdapterPosition(), v);
+            return false;
         }
 
         /**
@@ -267,6 +294,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 Menu.NONE, R.string.restore_backup);
                 */
         }
+
     }
 }
 

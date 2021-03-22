@@ -26,8 +26,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.mycoloruniverse.familyteamx.Defines.TASK_GUID;
-
 /**
  * 1. Проект расчитан на создание команды, которая выполняет какие-то действия и отмечает что сделано
  * 2. Команда может состоять из списка людей, кторые устновили приложение и (следовательно) автоматом зарегестрировались в базе данных.
@@ -84,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
         recyclerView.setOnCreateContextMenuListener(this); // необходимо для контекстного меню для RecycledView
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+        /*
         fabAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
                 // startActivityForResult(intent, IDD_TASK_ADD);
             }
         });
+
+         */
 
 
         presenter.prepareDataForTab(tabHost.getCurrentTab());
@@ -204,6 +205,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
     @Override
     public Context getContext() {
         return getApplicationContext();
+    }
+
+    @Override
+    public FloatingActionButton getFab() {
+        return fabAddTask;
     }
 
 
