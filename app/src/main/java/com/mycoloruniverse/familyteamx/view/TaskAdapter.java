@@ -2,6 +2,7 @@ package com.mycoloruniverse.familyteamx.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,8 @@ import java.util.List;
  */
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> implements Defines {
+    private final String TAG = TaskAdapter.class.getSimpleName();
+
     private final List<Task> taskList;
     private final int currentPosition = -1;
     private final Context context;
@@ -124,11 +127,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         // holder.contentView.setText( String.valueOf( taskList.get( position ).getCreated_time() ) );
         holder.contentView.setText(
                 String.format("Spent sum: (%s), Items: %s, Done: %s",
-                        Common.DoubleToStr(taskList.get(position).getSum(), 2),
-                        Common.DoubleToStr(taskList.get(position).getActiveItemsCount(), 0),
+                        Common.DoubleToStr(taskList.get(position).getVirtualSum(), 2),
+                        //Common.DoubleToStr(taskList.get(position).getActiveItemsCount(), 0),
+                        Common.DoubleToStr(taskList.get(position).getVirtualDetail_count(), 0),
                         Common.DoubleToStr(taskList.get(position).getItemsDone(), 0)
                 )
         );
+
+        Log.d(TAG, taskList.get(position).getGuid() + ", Деталей в адаптере: " + Common.DoubleToStr(taskList.get(position).getItems().size(), 0));
 
         /*
         holder.itemView.setOnClickListener(new View.OnClickListener() {

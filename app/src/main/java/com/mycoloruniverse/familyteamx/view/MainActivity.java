@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
                 250);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
         this.addContentView(progressBar, params);
-        showProgressBar();
+        // showProgressBar();
     }
 
 

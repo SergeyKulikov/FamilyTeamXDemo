@@ -11,6 +11,7 @@ import com.mycoloruniverse.familyteamx.model.Task;
 import com.mycoloruniverse.familyteamx.model.TaskItem;
 import com.mycoloruniverse.familyteamx.view.ITaskEditActivityView;
 
+import io.reactivex.MaybeObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -43,7 +44,8 @@ public class TaskEditActivityPresenter implements Defines {
                     task = item;
 
                     // детальки задачи
-                    disposableTaskItems = dao.rx_loadTaskItems(taskGUID).subscribeOn(Schedulers.io())
+                    disposableTaskItems = dao.rx_loadTaskItems(taskGUID.trim())
+                            .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(items -> {
                                 task.setItems(items);
@@ -83,9 +85,42 @@ public class TaskEditActivityPresenter implements Defines {
     public String addTaskItem() {
         TaskItem taskItem = new TaskItem(task.getGuid());
         this.task.getItems().add(taskItem);
+        this.saveTaskItem(taskItem);
 
         return taskItem.getGuid();
     }
+
+    public void saveTaskItem(TaskItem taskItem) {
+
+
+        view.updateView();
+
+        dao.rx_SaveTaskItem(taskItem)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MaybeObserver<Long>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+                        Log.d(TAG, "Task Item has Disposable: " + d.isDisposed());
+                    }
+
+                    @Override
+                    public void onSuccess(@io.reactivex.annotations.NonNull Long aLong) {
+                        Log.d(TAG, "Task Item has written to SQLite: " + aLong);
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+                        Log.e(TAG, "TasItem save error: " + e.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "Task Item has done to SQLite: ");
+                    }
+                });
+    }
+
 
     public double getSum() {
         return task.getSum();

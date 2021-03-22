@@ -45,7 +45,7 @@ public class MainActivityPresenter implements Defines {
     }
 
     private Maybe<List<Task>> loadTaskList(int status) {
-        return dao.rx_loadTaskList(status);
+        return dao.rx_loadTaskListWithCount(status);
     }
 
     public void updateFullName(String fullName) {
@@ -68,21 +68,46 @@ public class MainActivityPresenter implements Defines {
     public void prepareDataForTab(int currentTab) {
         // Зная вкладку мы должны получить список задач из БД
         int status_id = statusMap.get(currentTab);
-
+        view.showProgressBar();
         loadRX = loadTaskList(status_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(tasks -> {
-                    view.showProgressBar();
+
+                    //view.getTaskAdapter().setTaskList(tasks);
+
+
+                    // TODO: сечайс для простаты сделана загрузка всех детеалек. Переделать на закрузку только в случае необходимости.
+                    /*
+                    for (int i = 0; i < tasks.size(); i++) {
+                        int finalI = i;
+                        String task_guid = tasks.get(i).getGuid();
+                        Log.d(TAG, "-------------- Task GUID:"+task_guid);
+                        dao.rx_loadTaskItems(task_guid.trim())
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(items -> {
+                                    tasks.get(finalI).setItems(items);
+                                    Log.d(TAG, "---------------------- Деталей: "+tasks.get(finalI).getItems().size());
+                                }, throwable -> {
+                                    String mes = throwable.getLocalizedMessage();
+                                    Log.e(TAG, mes);
+                                });
+
+                    }
+
+                    */
                     view.getTaskAdapter().setTaskList(tasks);
-                    prepareDataForTab(view.getTabHost().getCurrentTab());
+                    view.getTaskAdapter().notifyDataSetChanged();
+                    view.hideProgressBar();
+                    // prepareDataForTab(view.getTabHost().getCurrentTab());
                 }, throwable -> {
                     Log.e(TAG, throwable.getLocalizedMessage());
+                    view.hideProgressBar();
                 });
 
-        view.hideProgressBar();
-    }
 
+    }
 
     public String addTask() {
         task = new Task();

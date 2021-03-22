@@ -10,6 +10,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.ActionBar;
@@ -34,6 +35,7 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
     private EditText etItemSum;
     private EditText etItemPrice;
     private Spinner sprItemUnit;
+    private RadioGroup rgProgressTaskItem;
     private RadioButton rbProcessItem, rbDoneItem, rbCanceledItem;
     //private ExpandableListView elvItemUnit;
     private Button btnOkItem, btnCancelItem;
@@ -133,6 +135,8 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
             }
         });
 
+
+        rgProgressTaskItem = findViewById(R.id.rgProgressTaskItem);
         rbDoneItem = findViewById(R.id.rbDoneTaskItem);
         rbCanceledItem = findViewById(R.id.rbCancelledTaskItem);
         rbProcessItem = findViewById(R.id.rbInProgressTaskItem);
@@ -217,7 +221,8 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
                 // Пишем изменения в базу
                 // TODO: для сетевой работы придется вынести в отдельный класс
 
-                presenter.saveTaskItem();
+
+                presenter.saveTaskItem(); // В презентере забираем данные b пишем
 
                 //Intent intent = new Intent();
                 //intent.putExtra(TASK_ITEM_GUID, presenter.getTaskItemGUID());
@@ -247,6 +252,41 @@ public class TaskItemEditActivity extends AppCompatActivity implements ITaskItem
         rbProcessItem.setChecked(!presenter.isDone() && !presenter.isCanceled());
     }
 
+    @Override
+    public double getSum() {
+        return Common.StrToDouble(etItemSum.getText().toString());
+    }
+
+    @Override
+    public double getValue() {
+        return Common.StrToDouble(etItemValue.getText().toString());
+    }
+
+    @Override
+    public String getName() {
+        return actvItemName.getText().toString();
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public int getStatus() {
+        int id = rgProgressTaskItem.getCheckedRadioButtonId();
+        switch (id) {
+            case R.id.rbInProgressTaskItem:
+                return IDD_STATUS_PROGRESS;
+            case R.id.rbDoneTaskItem:
+                return IDD_STATUS_DONE;
+            case R.id.rbCancelledTaskItem:
+                return IDD_STATUS_CANCELLED;
+            default:
+                return IDD_STATUS_NON;
+        }
+    }
+
+    @Override
+    public String getUnit() {
+        return sprItemUnit.getPrompt().toString();
+    }
 
     @Override
     protected void onPause() {

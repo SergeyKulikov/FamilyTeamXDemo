@@ -32,6 +32,12 @@ public interface FamilyTeamDao {
     @Query("SELECT * FROM Task WHERE status = :status ORDER BY created_time DESC")
     Maybe<List<Task>> rx_loadTaskList(int status);
 
+    @Query("SELECT t.*, " +
+            "(SELECT count(*) FROM TaskItem WHERE task_guid = t.guid) as detail_count, " +
+            "(SELECT count(*) FROM TaskItem WHERE task_guid = t.guid AND done = 0 AND canceled = 0) as detail_active_count " +
+            "FROM Task t WHERE status = :status ORDER BY created_time DESC")
+    Maybe<List<Task>> rx_loadTaskListWithCount(int status);
+
     @Query("SELECT * FROM Task WHERE guid = :guid")
     Maybe<Task> rx_loadTask(String guid);
 

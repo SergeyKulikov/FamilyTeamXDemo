@@ -113,7 +113,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
                 if (isDivideSum) {
                     holder.values.setText(
                             String.format("%s %s\n∑ %s",
-                                    taskItemList.get(position).getValue(),
+                                    taskItemList.get(position).getVal(),
                                     taskItemList.get(position).getUnit(),
                                     taskItemList.get(position).getSum()
                             )
@@ -125,7 +125,7 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
             case TYPE_TRAVEL_LIST:
                 holder.values.setText(
                         String.format("%s %s",
-                                taskItemList.get(position).getValue(),
+                                taskItemList.get(position).getVal(),
                                 taskItemList.get(position).getUnit()
                         )
                 );

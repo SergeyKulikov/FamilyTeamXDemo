@@ -82,14 +82,15 @@ public class TaskItemEditActivityPresenter {
     }
 
     public double getPrice() {
-        return this.taskItem.getSum() / this.taskItem.getValue();
+        return this.taskItem.getSum() / this.taskItem.getVal();
     }
 
     public double getValue() {
-        return this.taskItem.getValue();
+        return this.taskItem.getVal();
     }
 
     public String getUnit() {
+        // TODO: это не то. Переделать.
         return this.taskItem.getUnit();
     }
 
@@ -104,12 +105,18 @@ public class TaskItemEditActivityPresenter {
 
     public void saveTaskItem() {
 
+        taskItem.setTitle(view.getName());
+        taskItem.setVal(view.getValue());
+        taskItem.setSum(view.getSum());
+        taskItem.setStatus(view.getStatus());
+        taskItem.setUnit(view.getUnit());
+
         disposableSaveTaskItem = dao.rx_SaveTaskItem(taskItem)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(id -> {
-                    isSavedItems = true;
-                    view.updateView();
+                            isSavedItems = true;
+                            view.updateView();
                         }
                 );
     }

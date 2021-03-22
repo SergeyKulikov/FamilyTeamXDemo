@@ -22,6 +22,9 @@ import java.util.List;
 
 @Entity
 public class Task extends BaseRecord implements Parcelable, Defines {
+    // @Relation(parentColumn = "guid", entityColumn = "task_guid", entity = TaskItem.class)
+    int detail_count;
+    int detail_active_count;
 
     private String creator_guid;  // Кто создал запись
     private long created_time;    // Дата создания
@@ -83,7 +86,6 @@ public class Task extends BaseRecord implements Parcelable, Defines {
         this.location = "";
     }
 
-
     public Task() {
         this.creator_guid = com.mycoloruniverse.familyteamx.Preferences.getUserGuid();
         this.setTitle(null);
@@ -105,7 +107,6 @@ public class Task extends BaseRecord implements Parcelable, Defines {
         this.weather = "";
         this.location = "";
     }
-
 
     public static String getTAG() {
         return TAG;
@@ -196,6 +197,10 @@ public class Task extends BaseRecord implements Parcelable, Defines {
         }
 
         return summ;
+    }
+
+    public double getVirtualSum() {
+        return sum;
     }
 
     public void setSum(double sum) {
@@ -425,6 +430,26 @@ public class Task extends BaseRecord implements Parcelable, Defines {
             }
         }
         return rez;
+    }
+
+    public int getVirtualDetail_count() {
+        return this.detail_count;
+    }
+
+    public int getDetail_count() {
+        return getItems().size();
+    }
+
+    public void setDetail_count(int detail_count) {
+        this.detail_count = detail_count;
+    }
+
+    public int getDetail_active_count() {
+        return detail_active_count;
+    }
+
+    public void setDetail_active_count(int detail_active_count) {
+        this.detail_active_count = detail_active_count;
     }
 
     @Override

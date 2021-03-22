@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,14 +15,16 @@ import org.json.JSONObject;
  * Created by Sergey on 21.12.2017.
  */
 
-@Entity
+@Entity(indices = {
+        @Index(value = "task_guid", unique = false)
+})
 public class TaskItem extends BaseRecord implements Parcelable {
     @NonNull
     private String task_guid;
     private boolean updateDone;
     private String description;
     private String unit;
-    private double value;
+    private double val;
     private double sum;
     private boolean done;
     private long modify_time;
@@ -62,7 +65,7 @@ public class TaskItem extends BaseRecord implements Parcelable {
         this.setTitle(content);
         this.description = description;
         this.unit = unit;
-        this.value = 0.00;
+        this.val = 0.00;
         this.sum = 0.00;
         this.done = false;
         this.modify_time = 0;
@@ -76,7 +79,7 @@ public class TaskItem extends BaseRecord implements Parcelable {
         this.setTitle("");
         this.description = "";
         this.unit = "-";
-        this.value = 0.00;
+        this.val = 0.00;
         this.sum = 0.00;
         this.done = false;
         this.modify_time = 0;
@@ -91,7 +94,7 @@ public class TaskItem extends BaseRecord implements Parcelable {
         this.setTitle("");
         this.description = "";
         this.unit = "-";
-        this.value = 0.00;
+        this.val = 0.00;
         this.sum = 0.00;
         this.done = false;
         this.modify_time = 0;
@@ -133,12 +136,32 @@ public class TaskItem extends BaseRecord implements Parcelable {
         this.unit = unit;
     }
 
-    public double getValue() {
-        return value;
+    protected TaskItem(Parcel in) {
+        setGuid(in.readString());
+        setContent(in.readString());
+        description = in.readString();
+        unit = in.readString();
+        val = in.readDouble();
+        sum = in.readDouble();
+        done = in.readByte() != 0;
+        modify_time = in.readLong();
+        close_time = in.readLong();
+        canceled = in.readByte() != 0;
+        close_maker_guid = in.readString();
+        utilities_ident = in.readInt();
+        status = in.readInt();
+        startUtilValue = in.createDoubleArray();
+        finishUtilValue = in.createDoubleArray();
+        valueUtil = in.createDoubleArray();
+        priceUtil = in.createDoubleArray();
+        sumUtil = in.createDoubleArray();
+        updateDone = in.readByte() != 0;
+        location = in.readString();
+        weather = in.readString();
     }
 
-    public void setValue(double value) {
-        this.value = value;
+    public double getVal() {
+        return val;
     }
 
     public double getSum() {
@@ -182,17 +205,8 @@ public class TaskItem extends BaseRecord implements Parcelable {
         this.canceled = canceled;
     }
 
-    public void set(TaskItem item) {
-        setContent(item.getContent());
-        this.description = item.getDescription();
-        this.unit = item.getUnit();
-        this.value = item.getValue();
-        this.sum = item.getSum();
-        this.done = item.isDone();
-        this.modify_time = item.getModify_time();
-        this.canceled = item.isCanceled();
-        this.close_maker_guid = item.getClose_maker_guid();
-        this.utilities_ident = item.getUtilities_ident();
+    public void setVal(double value) {
+        this.val = value;
     }
 
     public int getStatus() {
@@ -275,6 +289,24 @@ public class TaskItem extends BaseRecord implements Parcelable {
         this.close_time = close_time;
     }
 
+    public void set(TaskItem item) {
+        setContent(item.getContent());
+        this.description = item.getDescription();
+        this.unit = item.getUnit();
+        this.val = item.getVal();
+        this.sum = item.getSum();
+        this.done = item.isDone();
+        this.modify_time = item.getModify_time();
+        this.canceled = item.isCanceled();
+        this.close_maker_guid = item.getClose_maker_guid();
+        this.utilities_ident = item.getUtilities_ident();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     JSONObject asJSON() {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -283,7 +315,7 @@ public class TaskItem extends BaseRecord implements Parcelable {
             jsonObject.put("content", getContent());
             jsonObject.put("description", getDescription());
             jsonObject.put("unit", getUnit());
-            jsonObject.put("value", getValue());
+            jsonObject.put("value", getVal());
             jsonObject.put("sum", getSum());
             jsonObject.put("done", isDone());
             jsonObject.put("modify_time", getModify_time());
@@ -318,17 +350,12 @@ public class TaskItem extends BaseRecord implements Parcelable {
     }
 
     @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(getGuid());
         parcel.writeString(getContent());
         parcel.writeString(description);
         parcel.writeString(unit);
-        parcel.writeDouble(value);
+        parcel.writeDouble(val);
         parcel.writeDouble(sum);
         parcel.writeByte((byte) (done ? 1 : 0));
         parcel.writeLong(modify_time);
@@ -345,30 +372,6 @@ public class TaskItem extends BaseRecord implements Parcelable {
         parcel.writeByte((byte) (updateDone ? 1 : 0));
         parcel.writeString(location);
         parcel.writeString(weather);
-    }
-
-    protected TaskItem(Parcel in) {
-        setGuid(in.readString());
-        setContent(in.readString());
-        description = in.readString();
-        unit = in.readString();
-        value = in.readDouble();
-        sum = in.readDouble();
-        done = in.readByte() != 0;
-        modify_time = in.readLong();
-        close_time = in.readLong();
-        canceled = in.readByte() != 0;
-        close_maker_guid = in.readString();
-        utilities_ident = in.readInt();
-        status = in.readInt();
-        startUtilValue = in.createDoubleArray();
-        finishUtilValue = in.createDoubleArray();
-        valueUtil = in.createDoubleArray();
-        priceUtil = in.createDoubleArray();
-        sumUtil = in.createDoubleArray();
-        updateDone = in.readByte() != 0;
-        location = in.readString();
-        weather = in.readString();
     }
 
     @NonNull
