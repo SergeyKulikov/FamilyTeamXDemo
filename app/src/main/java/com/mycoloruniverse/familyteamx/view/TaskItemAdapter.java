@@ -253,6 +253,10 @@ public class TaskItemAdapter extends RecyclerView.Adapter<TaskItemAdapter.TaskIt
         TaskItemAdapter.clickListener = clickListener;
     }
 
+    public List<TaskItem> getTaskItemsList() {
+        return this.taskItemList;
+    }
+
     /*
     public interface ClickListener {
         void onItemClick(int position, View v);

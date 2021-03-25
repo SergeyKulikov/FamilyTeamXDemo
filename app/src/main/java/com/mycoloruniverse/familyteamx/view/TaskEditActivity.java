@@ -398,8 +398,18 @@ public class TaskEditActivity extends AppCompatActivity implements ITaskEditActi
 
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
+    public FloatingActionButton getFab() {
+        return fabAddTaskDetailItem;
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
+    }
+
+    @SuppressLint("NonConstantResourceId")
+
     public int getStatus() {
         int id = rgProgress.getCheckedRadioButtonId();
         switch (id) {

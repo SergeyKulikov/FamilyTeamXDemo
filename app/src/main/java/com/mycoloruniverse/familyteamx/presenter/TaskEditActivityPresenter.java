@@ -1,5 +1,6 @@
 package com.mycoloruniverse.familyteamx.presenter;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
@@ -12,6 +13,7 @@ import com.mycoloruniverse.familyteamx.model.Task;
 import com.mycoloruniverse.familyteamx.model.TaskItem;
 import com.mycoloruniverse.familyteamx.view.IClickListener;
 import com.mycoloruniverse.familyteamx.view.ITaskEditActivityView;
+import com.mycoloruniverse.familyteamx.view.TaskItemEditActivity;
 
 import io.reactivex.MaybeObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -22,12 +24,16 @@ public class TaskEditActivityPresenter implements Defines {
     private final String TAG = MainActivityPresenter.class.getSimpleName();
     private final FamilyTeamDao dao = FamilyTeamApp.getInstance().getDao().getDaoDatabase();
 
+    private final Intent intent;
+
     private final ITaskEditActivityView view;
     private Task task;
     private Disposable disposableTask, disposableTaskItems;
 
     public TaskEditActivityPresenter(ITaskEditActivityView view, String taskGUID) {
         this.view = view;
+        intent = new Intent(view.getContext(), TaskItemEditActivity.class);
+        setAdapterClick();
 
         if (taskGUID == null) {
             Log.e(TAG, "GUID задачи не получен");
@@ -59,8 +65,8 @@ public class TaskEditActivityPresenter implements Defines {
             public void onItemClick(int position, View v) {
                 Log.d(TAG, "onItemClick position: " + position);
                 // запускаем редактирование записи
-                // intent.putExtra(TASK_GUID, view.getTaskItemAdapter().getTaskItemsList().get(position).getGuid());
-                // (v.getContext()).startActivity(intent);
+                intent.putExtra(TASK_GUID, view.getTaskItemAdapter().getTaskItemsList().get(position).getGuid());
+                (v.getContext()).startActivity(intent);
 
             }
 

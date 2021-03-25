@@ -162,7 +162,6 @@ public class MainActivityPresenter implements Defines {
                 // запускаем редактирование записи
                 intent.putExtra(TASK_GUID, view.getTaskAdapter().getTaskList().get(position).getGuid());
                 (v.getContext()).startActivity(intent);
-
             }
 
             @Override
@@ -177,20 +176,12 @@ public class MainActivityPresenter implements Defines {
     public interface MainActivityView {
         // Здесь описываем методы, которые необходимо будет создать во View
         void updateUserInfoTextView(String info);
-
         void showProgressBar();
-
         void hideProgressBar();
-
         Context getContext();
-
         TaskAdapter getTaskAdapter();
-
         FloatingActionButton getFab();
-
         TabHost getTabHost();
-
-        // TabHost getTabHost();
     }
 
 }

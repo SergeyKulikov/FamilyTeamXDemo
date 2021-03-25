@@ -48,16 +48,6 @@ public class TaskItemEditActivityPresenter {
                 });
     }
 
-    /*
-    public static TaskItemEditActivityPresenter getInstance(ITaskItemEditActivityView view) {
-        if (instance == null) {
-            instance = new TaskItemEditActivityPresenter(view);
-        }
-
-        return instance;
-    }
-    */
-
     public String[] getGoods() {
 
         final String[][] strarray = {new String[0]};
